@@ -33,11 +33,13 @@ Gem::Specification.new do |s|
   s.require_paths          = ['lib']
   s.required_ruby_version  = '>= 1.9.3'
   s.signing_key            = File.expand_path(pvt_key) if $PROGRAM_NAME =~ /gem\z/
-  s.summary                = 'Sensu plugins for mailer'
+  s.summary                = 'Sensu plugins for kubernetes'
   s.test_files             = s.files.grep(%r{^(test|spec|features)/})
   s.version                = SensuPluginsKubernetes::Version::VER_STRING
 
   s.add_runtime_dependency 'sensu-plugin',      '1.2.0'
+  s.add_runtime_dependency 'kubeclient', '1.1.0'
+
 
   s.add_development_dependency 'bundler',                   '~> 1.7'
   s.add_development_dependency 'codeclimate-test-reporter', '~> 0.4'
