@@ -47,11 +47,11 @@ class KubePod < Sensu::Handler
   end
 
   def get_setting(name)
-   settings[config[:json_config]][name]
+    settings[config[:json_config]][name]
   end
 
   def handle
-    puts "K8 handler"
+    puts 'K8 handler'
     response = api_request(:DELETE, '/clients/' + @event['client']['name']).code
     deletion_status(response)
     begin
