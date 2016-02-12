@@ -48,7 +48,12 @@ class PodRuntime < Sensu::Plugin::Check::CLI
          description: 'List of pods to check',
          short: '-p PODS',
          long: '--pods',
-         required: true
+         default: 'all'
+
+  option :pod_filter,
+         description: 'Selector filter for pods to be checked',
+         short: '-f FILTER',
+         long: '--filter'
 
   option :warn_timeout,
          description: 'Threshold for pods to be in the pending state',
@@ -78,13 +83,18 @@ class PodRuntime < Sensu::Plugin::Check::CLI
     warn = false
     crit = false
     message = ''
+
     if cli.config[:pod_filter].nil?
       pods_list = parse_list(cli.config[:pod_list])
       pods = client.get_pods
+    else
+      pods = client.get_pods(label_selector: cli.config[:pod_filter].to_s)
+      pods_list = ['all']
     end
+
     pods.each do |pod|
       next if pod.nil?
-      next unless pods_list.include?(pod.metadata.name)
+      next unless pods_list.include?(pod.metadata.name) || pods_list.include?('all')
       # Check for Running state
       next unless pod.status.phase == 'Running'
       pod_stamp = Time.parse(pod.status.startTime)
