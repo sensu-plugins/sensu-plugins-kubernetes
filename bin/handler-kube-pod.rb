@@ -59,7 +59,7 @@ class KubePod < Sensu::Handler
       client.delete_pod @event['client']['name']
     rescue KubeException => e
       puts "[Kube Pod] KubeException: #{e.message}"
-    rescue Exception => e
+    rescue StandardError => e
       puts "[Kube Pod] Unknown error #{e}"
     end
   end

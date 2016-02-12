@@ -55,19 +55,15 @@ class AllNodesAreReady < Sensu::Plugin::Check::CLI
 
     failed_nodes = []
     client.get_nodes.each do |node|
-      lambda do
-        node.status.conditions.each do |condition|
-          next if condition.type != 'Ready'
-          if condition.status != 'True'
-            failed_nodes << node.metadata.name
-          end
-          return # Return from the lambda
-        end
+      item = node.status.conditions.detect { |condition| condition.type == 'Ready' }
+      if item.nil?
         warning "#{node.name} does not have a status"
-      end.call
+      elsif item.status != 'True'
+        failed_nodes << node.metadata.name
+      end
     end
 
-    if failed_nodes.size == 0
+    if failed_nodes.empty?
       ok 'All nodes are reporting as ready'
     end
     critical "Nodes are not ready: #{failed_nodes.join(' ')}"

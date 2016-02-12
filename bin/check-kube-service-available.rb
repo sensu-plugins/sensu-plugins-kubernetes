@@ -100,12 +100,8 @@ class AllServicesUp < Sensu::Plugin::Check::CLI
   end
 
   def parse_list(list)
-    if list && list.include?(',')
-      return list.split(',')
-    elsif list
-      return [list]
-    else
-      return ['']
-    end
+    return list.split(',') if list && list.include?(',')
+    return [list] if list
+    ['']
   end
 end
