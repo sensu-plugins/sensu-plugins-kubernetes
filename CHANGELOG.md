@@ -6,7 +6,7 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 ## [Unreleased]
 
 ## 0.0.1 2016-02-06
-
+### Added
 - initial release
 
-[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-couchdb/compare/0.0.1...HEAD
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/0.0.1...HEAD

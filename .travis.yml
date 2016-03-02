@@ -1,9 +1,6 @@
 language: ruby
 cache:
 - bundler
-before_install:
-- openssl aes-256-cbc -K $encrypted_80ef53756488_key -iv $encrypted_80ef53756488_iv
-  -in certs/pvt_key -out certs/gem-private_key.pem -d
 install:
 - bundle install
 rvm:
@@ -24,13 +21,13 @@ script:
 deploy:
   provider: rubygems
   api_key:
-    secure: NYSgOMa+MHVNAyEWefcxFuOUTC+jQ4JHz5V6x6xr1QcdG1+4cl7VyFEDoGJpYo1nmvJX7/0ZqpWyHU2YtJ5/E8lKQjQQ+T6Ir0qWCl1tljwY1ylVWaT1WZrjH+68Jxna9oKBEmDxMgyDpLI6t4j0GyzmlIM057EzIidUh0/Mzb3JeuB+Q7OFQH2jo2veRue/y0zLbSj3WfPBGzfPgMW+VAeWF60GfWTzV1WctoMDiOfZYSgsNQbyf5wnV1uDZVpCEayZOX1anrcUKf8vh9SW9Dw0xqaz2bUCbXyzAyFc54xXrVD5wXjBbLyxHh0MJEg3s2bWUqCQJ4u9sqab3LffXdjRpoliVwUKcF2zTtK7SPKJNHplJGCZf8+yhnf7i0mJRhaLVlYgOR6w/gMGAKKXxuJkMQOG9l/jFfIwvmXSDVUmLH90CzyJ8am9Rax53oC0LxvCG/RLmiANLbQxF720Y4kTky+qtX0BSwGbZk/welifdhwoIKZGLBznIkMbr5d/C+6Y90Dz2eR+CuFjfCY0ZqnV5l2DzEiqkBl8tby56m0iGIITpes7TjSVhpRwLRsVoXl2xj1KoirwkzhUbMBv2LPY/Dp3JlyNXr67qh/jzd2y4hX4CH7MQESxn5DpaJ71+EAkwknSWv+ZK6QvOwYNyX5/Ysau1yCjQrrgkTwia4M=
+    secure: EzXA4HctGH56NvP4RS+vEntVwB5q3K7xDnvCS7KQrZIly7B5rlXhJgHzrcdS61AAHybF/C4btOIazx3lkI+TihX3zyztziHa4+vwcavhF86TDk4MmDgYqScSL9agP+LOHlQ38jLY/l8buGLgF96V1/pgNZjnw5vTugE3GXtDfPF6f6CXg/3RqADF8yjglb9HAxWYEkwmPLZynbtHFJA9/h5mggVfjHJFAZLFHsewx4FB4FjxMrt3yusIlNbj9LKHHqsQqJl8DCoxGhiQmysSLS3NoN7vVhi3UA4TdHArtSZgRmsZKhsJDGcgM/DWGFvqmnHTItlAVTKPZhSAYBxIsbpY5adGMNE/QDDDbnjqhCE5PZQ1mQq12E1dmcFGZAV7vVPvzkBGCMNLnlH6KFuqw/mUg/BU7xPPMnvsc51XEbYJtFFZ1UGeJWTe0DTrLCmIZd4r9KaydNeal35iu/s+rC9aPh9u0AsSJiKVi3CewoVAgc+A+uF8WTTjol0APwO4sra4JlNBeKMVgq2/4uEzsSDCz+Y/U4Rw8RLLXi6xGB1PM1Ar9SvIabeoNj9gY+LApYI1YAPUUVUXf44TLSwvDSrUW12DnhPgMg0CjicGlZkXOAnDNob8b8bU8YUP7wN8eOwt0J63hhn40G7XCA5WCpNm0W7qbLlV8sUBb+3F07c=
   gem: sensu-plugins-kubernetes
   on:
     tags: true
-    repo: sensu-plugins/sensu-plugins-kubernetes
     all_branches: true
     rvm: 1.9.3
     rvm: 2.0
     rvm: 2.1
     rvm: 2.2
+    repo: sensu-plugins/sensu-plugins-kubernetes
