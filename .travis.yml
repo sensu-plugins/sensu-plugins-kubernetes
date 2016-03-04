@@ -16,7 +16,7 @@ notifications:
     on_failure: always
 script:
 - bundle exec rake default
-- gem build sensu-plugins-kuberbetes.gemspec
+- gem build sensu-plugins-kubernetes.gemspec
 - gem install sensu-plugins-kubernetes-*.gem
 deploy:
   provider: rubygems
