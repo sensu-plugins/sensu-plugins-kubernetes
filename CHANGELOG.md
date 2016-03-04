@@ -5,7 +5,7 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 
 ## [Unreleased]
 
-## 0.0.1 2016-02-06
+## 0.0.1 - 2016-03-03
 ### Added
 - initial release
 
