@@ -74,6 +74,13 @@ class AllPodsAreReady < Sensu::Plugin::Check::CLI
          short: '-f FILTER',
          long: '--filter'
 
+  option :exclude_namespace,
+         description: 'Exclude the specified list of namespaces',
+         short: '-n NAMESPACES',
+         long: '--exclude-namespace',
+         proc: proc { |a| a.split(',') },
+         default: ''
+
   def run
     cli = AllPodsAreReady.new
     api_server = cli.config[:api_server]
@@ -101,6 +108,7 @@ class AllPodsAreReady < Sensu::Plugin::Check::CLI
     end
     pods.each do |pod|
       next if pod.nil?
+      next if cli.config[:exclude_namespace].include?(pod.metadata.namespace)
       next unless pods_list.include?(pod.metadata.name) || pods_list.include?('all')
       # Check for pending state
       if pod.status.phase == 'Pending'
