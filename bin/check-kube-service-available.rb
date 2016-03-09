@@ -81,11 +81,20 @@ class AllServicesUp < Sensu::Plugin::Check::CLI
       end
       # Make sure our pod is running
       next if pod.nil?
+      pod_available = false
       pod.each do |p|
-        unless p.status.phase.include?('Running')
-          failed_services << p.metadata.name
+        next unless p.status.phase.include?('Running')
+        p.status.conditions.each do |c|
+          next unless c.type == 'Ready'
+          if c.status == 'True'
+            pod_available = true
+            break
+          end
+          break if pod_available
         end
       end
+
+      failed_services << p.metadata.name if pod_available == false
     end
 
     if failed_services.empty? && services.empty?
