@@ -30,6 +30,7 @@
 require 'sensu-plugin/check/cli'
 require 'json'
 require 'kubeclient'
+require 'time'
 
 class AllServicesUp < Sensu::Plugin::Check::CLI
   option :api_server,
@@ -49,6 +50,13 @@ class AllServicesUp < Sensu::Plugin::Check::CLI
          short: '-l SERVICES',
          long: '--list',
          required: true
+
+  option :pendingTime,
+         description: 'Time (in seconds) a pod may be pending for and be valid',
+         short: '-p SECONDS',
+         long: '--pending',
+         default: 0,
+         proc: proc(&:to_i)
 
   def run
     cli = AllServicesUp.new
@@ -83,14 +91,21 @@ class AllServicesUp < Sensu::Plugin::Check::CLI
       next if pod.nil?
       pod_available = false
       pod.each do |p|
-        next unless p.status.phase.include?('Running')
-        p.status.conditions.each do |c|
-          next unless c.type == 'Ready'
-          if c.status == 'True'
-            pod_available = true
+        case p.status.phase
+        when 'Pending'
+          if (Time.now - Time.parse(p.status.startTime)).to_i < cli.config[:pendingTime]
+            pod_available = True
             break
           end
-          break if pod_available
+        when 'Running'
+          p.status.conditions.each do |c|
+            next unless c.type == 'Ready'
+            if c.status == 'True'
+              pod_available = true
+              break
+            end
+            break if pod_available
+          end
         end
       end
 
