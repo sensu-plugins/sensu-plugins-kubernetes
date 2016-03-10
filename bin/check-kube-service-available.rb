@@ -93,6 +93,7 @@ class AllServicesUp < Sensu::Plugin::Check::CLI
       pod.each do |p|
         case p.status.phase
         when 'Pending'
+          next if p.status.startTime.nil?
           if (Time.now - Time.parse(p.status.startTime)).to_i < cli.config[:pendingTime]
             pod_available = True
             break
