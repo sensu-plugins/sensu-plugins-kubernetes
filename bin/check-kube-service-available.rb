@@ -108,9 +108,8 @@ class AllServicesUp < Sensu::Plugin::Check::CLI
             break if pod_available
           end
         end
+        failed_services << p.metadata.name if pod_available == false
       end
-
-      failed_services << p.metadata.name if pod_available == false
     end
 
     if failed_services.empty? && services.empty?
