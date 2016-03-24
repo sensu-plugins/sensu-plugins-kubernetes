@@ -103,17 +103,17 @@ class AllServicesUp < Sensu::Plugin::Check::CLI
       verify_ssl: ssl_verify_mode
     }
 
-    if !api_user.nil? && !api_password.nil?
-      auth_options = {
+    auth_options = if !api_user.nil? && !api_password.nil?
+      {
         username: api_user,
         password: api_password
       }
     elsif !api_token.nil?
-      auth_options = {
+      {
         bearer_token: api_token
       }
     else
-      auth_options = nil
+      nil
     end
 
     begin
