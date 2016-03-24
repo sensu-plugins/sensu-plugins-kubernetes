@@ -115,9 +115,9 @@ class AllPodsAreReady < Sensu::Plugin::Check::CLI
     api_ssl_verify_mode = cli.config[:api_ssl_verify_mode]
 
     case api_ssl_verify_mode
-    when "none"
+    when 'none'
       api_ssl_verify_mode = OpenSSL::SSL::VERIFY_NONE
-    when "peer"
+    when 'peer'
       api_ssl_verify_mode = OpenSSL::SSL::VERIFY_PEER
     else
       api_ssl_verify_mode = ''
