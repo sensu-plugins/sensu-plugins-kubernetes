@@ -76,14 +76,14 @@ class AllNodesAreReady < Sensu::Plugin::Check::CLI
     api_token = cli.config[:api_token]
     api_ssl_verify_mode = cli.config[:api_ssl_verify_mode]
 
-    ssl_verify_mode = case api_ssl_verify_mode
+    ssl_verify_mode = nil
+    case api_ssl_verify_mode
     when 'none'
-      OpenSSL::SSL::VERIFY_NONE
+      ssl_verify_mode = OpenSSL::SSL::VERIFY_NONE
     when 'peer'
-      OpenSSL::SSL::VERIFY_PEER
-    else
-      nil
+      ssl_verify_mode = OpenSSL::SSL::VERIFY_PEER
     end
+
 
     ssl_options = {
       verify_ssl: ssl_verify_mode

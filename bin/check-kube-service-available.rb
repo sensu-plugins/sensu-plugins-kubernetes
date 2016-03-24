@@ -91,13 +91,12 @@ class AllServicesUp < Sensu::Plugin::Check::CLI
     api_token = cli.config[:api_token]
     api_ssl_verify_mode = cli.config[:api_ssl_verify_mode]
 
+    ssl_verify_mode = nil
     case api_ssl_verify_mode
     when 'none'
       ssl_verify_mode = OpenSSL::SSL::VERIFY_NONE
     when 'peer'
       ssl_verify_mode = OpenSSL::SSL::VERIFY_PEER
-    else
-      ssl_verify_mode = nil
     end
 
     ssl_options = {
