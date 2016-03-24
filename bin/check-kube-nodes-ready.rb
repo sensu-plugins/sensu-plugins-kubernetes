@@ -88,6 +88,7 @@ class AllNodesAreReady < Sensu::Plugin::Check::CLI
       verify_ssl: ssl_verify_mode
     }
 
+    auth_options = nil
     if !api_user.nil? && !api_password.nil?
       auth_options = {
         username: api_user,
@@ -97,8 +98,6 @@ class AllNodesAreReady < Sensu::Plugin::Check::CLI
       auth_options = {
         bearer_token: api_token
       }
-    else
-      auth_options = nil
     end
 
     begin
