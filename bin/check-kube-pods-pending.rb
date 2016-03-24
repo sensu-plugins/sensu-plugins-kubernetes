@@ -126,18 +126,10 @@ class AllPodsAreReady < Sensu::Plugin::Check::CLI
       verify_ssl: ssl_verify_mode
     }
 
-    auth_options = if !api_user.nil? && !api_password.nil?
-      {
-        username: api_user,
-        password: api_password
-      }
-    elsif !api_token.nil?
-      {
-        bearer_token: api_token
-      }
-    else
-      nil
-    end
+    auth_options = {}
+    auth_options[:username] = api_user unless api_user.nil?
+    auth_options[:password] = api_password unless api_password.nil?
+    auth_options[:bearer_token] = api_token unless api_token.nil?
 
     begin
       client = Kubeclient::Client.new(api_server, api_version, ssl_options: ssl_options, auth_options: auth_options)
