@@ -71,9 +71,9 @@ class AllNodesAreReady < Sensu::Plugin::Check::CLI
     cli = AllNodesAreReady.new
     api_server = cli.config[:api_server]
     api_version = cli.config[:api_version]
-    api_user = cli.config[:api_user],
-    api_password = cli.config[:api_password],
-    api_token = cli.config[:api_token],
+    api_user = cli.config[:api_user]
+    api_password = cli.config[:api_password]
+    api_token = cli.config[:api_token]
     api_ssl_verify_mode = cli.config[:api_ssl_verify_mode]
 
     case api_ssl_verify_mode
