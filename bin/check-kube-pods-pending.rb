@@ -116,15 +116,15 @@ class AllPodsAreReady < Sensu::Plugin::Check::CLI
 
     case api_ssl_verify_mode
     when 'none'
-      api_ssl_verify_mode = OpenSSL::SSL::VERIFY_NONE
+      ssl_verify_mode = OpenSSL::SSL::VERIFY_NONE
     when 'peer'
-      api_ssl_verify_mode = OpenSSL::SSL::VERIFY_PEER
+      ssl_verify_mode = OpenSSL::SSL::VERIFY_PEER
     else
-      api_ssl_verify_mode = ''
+      ssl_verify_mode = ''
     end
 
     ssl_options = {
-      verify_ssl: api_ssl_verify_mode
+      verify_ssl: ssl_verify_mode
     }
 
     if !api_user.nil? && !api_password.nil?
