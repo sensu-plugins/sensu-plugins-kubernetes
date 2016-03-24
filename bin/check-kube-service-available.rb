@@ -92,26 +92,26 @@ class AllServicesUp < Sensu::Plugin::Check::CLI
     api_ssl_verify_mode = cli.config[:api_ssl_verify_mode]
 
     case api_ssl_verify_mode
-      when 'none'
-        api_ssl_verify_mode = OpenSSL::SSL::VERIFY_NONE
-      when 'peer'
-        api_ssl_verify_mode = OpenSSL::SSL::VERIFY_PEER
-      else
-        api_ssl_verify_mode = nil
+    when 'none'
+      api_ssl_verify_mode = OpenSSL::SSL::VERIFY_NONE
+    when 'peer'
+      api_ssl_verify_mode = OpenSSL::SSL::VERIFY_PEER
+    else
+      api_ssl_verify_mode = nil
     end
 
     ssl_options = {
-        verify_ssl: api_ssl_verify_mode
+      verify_ssl: api_ssl_verify_mode
     }
 
     if !api_user.nil? && !api_password.nil?
       auth_options = {
-          username: api_user,
-          password: api_password
+        username: api_user,
+        password: api_password
       }
     elsif !api_token.nil?
       auth_options = {
-          bearer_token: api_token
+        bearer_token: api_token
       }
     else
       auth_options = nil
