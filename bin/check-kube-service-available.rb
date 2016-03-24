@@ -58,13 +58,66 @@ class AllServicesUp < Sensu::Plugin::Check::CLI
          default: 0,
          proc: proc(&:to_i)
 
+  option :api_user,
+         description: 'User with access to API',
+         short: '-u USER',
+         long: '--user',
+         default: nil
+
+  option :api_password,
+         description: 'If user is passed, also pass a password',
+         short: '-p PASSWORD',
+         long: '--password',
+         default: nil
+
+  option :api_token,
+         description: 'May only need a bearer token for authorization',
+         short: '-t TOKEN',
+         long: '--token',
+         default: nil
+
+  option :api_ssl_verify_mode,
+         description: 'SSL verify mode',
+         short: '-svm MODE',
+         long: '--ssl-verify-mode',
+         default: 'none'
+
   def run
     cli = AllServicesUp.new
     api_server = cli.config[:api_server]
     api_version = cli.config[:api_version]
+    api_user = cli.config[:api_user]
+    api_password = cli.config[:api_password]
+    api_token = cli.config[:api_token]
+    api_ssl_verify_mode = cli.config[:api_ssl_verify_mode]
+
+    ssl_verify_mode = nil
+    case api_ssl_verify_mode
+    when 'none'
+      ssl_verify_mode = OpenSSL::SSL::VERIFY_NONE
+    when 'peer'
+      ssl_verify_mode = OpenSSL::SSL::VERIFY_PEER
+    end
+
+    ssl_options = {
+      verify_ssl: ssl_verify_mode
+    }
+
+    if !api_user.nil? && !api_password.nil?
+      auth_options = {
+        username: api_user,
+        password: api_password
+      }
+    elsif !api_token.nil?
+      auth_options = {
+        bearer_token: api_token
+      }
+    else
+      auth_options = nil
+    end
 
     begin
-      client = Kubeclient::Client.new(api_server, api_version)
+      client = Kubeclient::Client.new(api_server, api_version, ssl_options: ssl_options, auth_options: auth_options)
     rescue
       warning 'Unable to connect to Kubernetes API server'
     end
