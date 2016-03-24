@@ -88,13 +88,10 @@ class AllNodesAreReady < Sensu::Plugin::Check::CLI
       verify_ssl: ssl_verify_mode
     }
 
-    if !api_user.nil? && !api_password.nil?
-      auth_options = { username: api_user, password: api_password }
-    elsif !api_token.nil?
-      auth_options = { bearer_token: api_token }
-    else
-      auth_options = nil
-    end
+    auth_options = {}
+    auth_options[:username] = api_user unless api_user.nil?
+    auth_options[:password] = api_password unless api_password.nil?
+    auth_options[:bearer_token] = api_token unless api_token.nil?
 
     begin
       client = Kubeclient::Client.new(api_server, api_version, ssl_options: ssl_options, auth_options: auth_options)
