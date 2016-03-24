@@ -84,7 +84,6 @@ class AllNodesAreReady < Sensu::Plugin::Check::CLI
       ssl_verify_mode = OpenSSL::SSL::VERIFY_PEER
     end
 
-
     ssl_options = {
       verify_ssl: ssl_verify_mode
     }
