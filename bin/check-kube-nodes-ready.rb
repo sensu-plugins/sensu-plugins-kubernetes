@@ -44,28 +44,28 @@ class AllNodesAreReady < Sensu::Plugin::Check::CLI
          default: 'v1'
 
   option :api_user,
-          description: 'User with access to API',
-          short: '-u USER',
-          long: '--user',
-          default: nil
+         description: 'User with access to API',
+         short: '-u USER',
+         long: '--user',
+         default: nil
 
   option :api_password,
-          description: 'If user is passed, also pass a password',
-          short: '-p PASSWORD',
-          long: '--password',
-          default: nil
+         description: 'If user is passed, also pass a password',
+         short: '-p PASSWORD',
+         long: '--password',
+         default: nil
 
   option :api_token,
-          description: 'May only need a bearer token for authorization',
-          short: '-t TOKEN',
-          long: '--token',
-          default: nil
+         description: 'May only need a bearer token for authorization',
+         short: '-t TOKEN',
+         long: '--token',
+         default: nil
 
   option :api_ssl_verify_mode,
-          description: 'SSL verify mode',
-          short: '-svm MODE',
-          long: '--ssl-verify-mode',
-          default: 'none'
+         description: 'SSL verify mode',
+         short: '-svm MODE',
+         long: '--ssl-verify-mode',
+         default: 'none'
 
   def run
     cli = AllNodesAreReady.new
