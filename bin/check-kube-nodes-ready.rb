@@ -63,7 +63,7 @@ class AllNodesAreReady < Sensu::Plugin::Check::CLI
 
   option :api_ssl_verify_mode,
          description: 'SSL verify mode',
-         short: '-svm MODE',
+         short: '-m MODE',
          long: '--ssl-verify-mode',
          default: 'none'
 

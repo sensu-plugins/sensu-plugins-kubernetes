@@ -19,10 +19,10 @@ This provides functionality to check node and pod status as well as api and serv
 
 ## Usage
 ```
-check-kube-nodes-ready.rb -s SERVER -v API_VERSION -u USER -p PASSWORD -t TOKEN -svm SSL_VERIFY_MODE
+check-kube-nodes-ready.rb -s SERVER -v API_VERSION -u USER -p PASSWORD -t TOKEN -m SSL_VERIFY_MODE
 check-kube-apiserver-available.rb -s SERVER
-check-kube-pods-pending.rb -s SERVER -u USER -p PASSWORD -t TOKEN -svm SSL_VERIFY_MODE
-check-kube-service-available.rb -s SERVER  -l SERVICE1,SERVICE2 -u USER -p PASSWORD -t TOKEN -svm SSL_VERIFY_MODE
+check-kube-pods-pending.rb -s SERVER -u USER -p PASSWORD -t TOKEN -m SSL_VERIFY_MODE
+check-kube-service-available.rb -s SERVER  -l SERVICE1,SERVICE2 -u USER -p PASSWORD -t TOKEN -m SSL_VERIFY_MODE
 ```
 ## Installation
 
