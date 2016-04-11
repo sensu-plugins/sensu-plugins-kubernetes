@@ -95,7 +95,7 @@ class AllPodsAreReady < Sensu::Plugin::Check::CLI
 
   option :api_token,
          description: 'May only need a bearer token for authorization',
-         short: '-t TOKEN',
+         short: '-k TOKEN',
          long: '--token',
          default: nil
 
