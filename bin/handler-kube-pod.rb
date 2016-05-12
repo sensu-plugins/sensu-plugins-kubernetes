@@ -28,26 +28,32 @@
 #
 
 require 'sensu-handler'
-require 'kubeclient'
-require 'json'
+require 'sensu-plugins-kubernetes/client'
 
 class KubePod < Sensu::Handler
+  include Sensu::Plugins::Kubernetes::Client
+
   option :json_config,
          description: 'Configuration name',
          short: '-j JSONCONFIG',
          long: '--json JSONCONFIG',
          default: 'k8s'
 
-  def api_server
-    get_setting('api_server') || ENV['KUBERNETES_MASTER']
-  end
-
-  def api_version
-    get_setting('api_version') || 'v1'
-  end
-
-  def get_setting(name)
-    settings[config[:json_config]][name]
+  def client_config
+    defaults = {
+      server: ENV['KUBERNETES_MASTER'],
+      version: 'v1'
+    }
+    h = settings[config[:json_config]]
+    if h.is_a?(Hash)
+      # Maintain backwards compatibility
+      h[:server] ||= h[:api_server]
+      h[:version] ||= h[:api_version]
+      # And merge
+      defaults.merge!(h)
+    else
+      defaults
+    end
   end
 
   def handle
@@ -55,8 +61,10 @@ class KubePod < Sensu::Handler
     response = api_request(:DELETE, '/clients/' + @event['client']['name']).code
     deletion_status(response)
     begin
-      client = Kubeclient::Client.new(api_server, api_version)
+      client = kubeclient(client_config)
       client.delete_pod @event['client']['name']
+    rescue ArgumentError => e
+      puts "[Kube Pod] Invalid settings: #{e.message}"
     rescue KubeException => e
       puts "[Kube Pod] KubeException: #{e.message}"
     rescue Exception => e # rubocop:disable Lint/RescueException

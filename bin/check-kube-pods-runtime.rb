@@ -27,11 +27,9 @@
 #   for details.
 #
 
-require 'sensu-plugins-kubernetes'
-require 'json'
+require 'sensu-plugins-kubernetes/cli'
 
-class PodRuntime < Sensu::Plugin::Check::CLI
-
+class PodRuntime < Sensu::Plugins::Kubernetes::CLI
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
 
   option :pod_list,
@@ -58,20 +56,17 @@ class PodRuntime < Sensu::Plugin::Check::CLI
          proc: proc(&:to_i)
 
   def run
-    cli = PodRuntime.new
-    client = self.get_client(cli)
-
     pods_list = []
     pods = []
     warn = false
     crit = false
     message = ''
 
-    if cli.config[:pod_filter].nil?
-      pods_list = parse_list(cli.config[:pod_list])
+    if config[:pod_filter].nil?
+      pods_list = parse_list(config[:pod_list])
       pods = client.get_pods
     else
-      pods = client.get_pods(label_selector: cli.config[:pod_filter].to_s)
+      pods = client.get_pods(label_selector: config[:pod_filter].to_s)
       pods_list = ['all']
     end
 
@@ -83,11 +78,11 @@ class PodRuntime < Sensu::Plugin::Check::CLI
       pod_stamp = Time.parse(pod.status.startTime)
       runtime = (Time.now.utc - pod_stamp.utc).to_i
 
-      if !cli.config[:critical_timeout].nil? && runtime > cli.config[:critical_timeout]
-        message << "#{pod.metadata.name} exceeds threshold #{cli.config[:critical_timeout]} "
+      if !config[:critical_timeout].nil? && runtime > config[:critical_timeout]
+        message << "#{pod.metadata.name} exceeds threshold #{config[:critical_timeout]} "
         crit = true
-      elsif !cli.config[:warn_timeout].nil? && runtime > cli.config[:warn_timeout]
-        message << "#{pod.metadata.name} exceeds threshold #{cli.config[:warn_timeout]} "
+      elsif !config[:warn_timeout].nil? && runtime > config[:warn_timeout]
+        message << "#{pod.metadata.name} exceeds threshold #{config[:warn_timeout]} "
         warn = true
       end
     end
@@ -99,6 +94,8 @@ class PodRuntime < Sensu::Plugin::Check::CLI
     else
       ok 'All pods within threshold'
     end
+  rescue KubeException => e
+    critical 'API error: ' << e.message
   end
 
   def parse_list(list)

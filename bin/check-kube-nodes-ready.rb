@@ -25,17 +25,12 @@
 #   for details.
 #
 
-require 'sensu-plugins-kubernetes'
-require 'json'
+require 'sensu-plugins-kubernetes/cli'
 
 class AllNodesAreReady < Sensu::Plugins::Kubernetes::CLI
-
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
 
   def run
-    cli = AllNodesAreReady.new
-    client = self.get_client(cli)
-
     failed_nodes = []
     client.get_nodes.each do |node|
       item = node.status.conditions.detect { |condition| condition.type == 'Ready' }
@@ -50,5 +45,7 @@ class AllNodesAreReady < Sensu::Plugins::Kubernetes::CLI
       ok 'All nodes are reporting as ready'
     end
     critical "Nodes are not ready: #{failed_nodes.join(' ')}"
+  rescue KubeException => e
+    critical 'API error: ' << e.message
   end
 end

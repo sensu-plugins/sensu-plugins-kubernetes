@@ -27,13 +27,10 @@
 #   for details.
 #
 
-require 'sensu-plugins-kubernetes'
-require 'json'
-require 'kubeclient'
+require 'sensu-plugins-kubernetes/cli'
 require 'time'
 
-class AllServicesUp < Sensu::Plugin::Check::CLI
-
+class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
 
   option :service_list,
@@ -50,10 +47,7 @@ class AllServicesUp < Sensu::Plugin::Check::CLI
          proc: proc(&:to_i)
 
   def run
-    cli = AllServicesUp.new
-    client = self.get_client(cli)
-
-    services = parse_list(cli.config[:service_list])
+    services = parse_list(config[:service_list])
     failed_services = []
     s = client.get_services
     s.each do |a|
@@ -78,7 +72,7 @@ class AllServicesUp < Sensu::Plugin::Check::CLI
         case p.status.phase
         when 'Pending'
           next if p.status.startTime.nil?
-          if (Time.now - Time.parse(p.status.startTime)).to_i < cli.config[:pendingTime]
+          if (Time.now - Time.parse(p.status.startTime)).to_i < config[:pendingTime]
             pod_available = True
             break
           end
@@ -105,6 +99,8 @@ class AllServicesUp < Sensu::Plugin::Check::CLI
     else
       critical "Some services could not be checked: #{services.join(' ')}"
     end
+  rescue KubeException => e
+    critical 'API error: ' << e.message
   end
 
   def parse_list(list)
