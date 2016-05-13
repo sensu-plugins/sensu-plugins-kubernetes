@@ -3,7 +3,10 @@ require 'sensu-plugins-kubernetes/client.rb'
 
 module Sensu
   module Plugins
+    # Namespace for the Kubernetes sensu-plugin.
     module Kubernetes
+      # Abstract base class for a Sensu check that also provides
+      # Kubernetes client connection support.
       class CLI < Sensu::Plugin::Check::CLI
         include Sensu::Plugins::Kubernetes::Client
 
@@ -65,6 +68,9 @@ module Sensu
 
         attr_reader :client
 
+        # Initializes the Sensu check by creating a Kubernetes client
+        # from the given options and will report a critical error if
+        # those arguments are incorrect.
         def initialize
           super()
           begin

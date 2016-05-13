@@ -16,8 +16,18 @@
 #   gem: kube-client
 #
 # USAGE:
-# -s SERVER - The kube server to use
-# -l SERVICES - The comma delimited list of services to check
+# -s, --api-server URL             URL to API server
+# -v, --api-version VERSION        API version. Defaults to 'v1'
+#     --in-cluster                 Use service account authentication
+#     --ca-file CA-FILE            CA file to verify API server cert
+#     --cert CERT-FILE             Client cert to present
+#     --key KEY-FILE               Client key for the client cert
+# -u, --user USER                  User with access to API
+#     --password PASSWORD          If user is passed, also pass a password
+#     --token TOKEN                Bearer token for authorization
+#     --token-file TOKEN-FILE      File containing bearer token for authorization
+# -l, --list SERVICES              List of services to check (required)
+# -p, --pending SECONDS            Time (in seconds) a pod may be pending for and be valid
 #
 # NOTES:
 #

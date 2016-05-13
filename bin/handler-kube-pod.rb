@@ -17,7 +17,7 @@
 #   gem: kube-client
 #
 # USAGE:
-# -j JSONCONFIG - The config file to us
+# -j JSONCONFIG - The settings section to use
 #
 # NOTES:
 #
@@ -34,7 +34,7 @@ class KubePod < Sensu::Handler
   include Sensu::Plugins::Kubernetes::Client
 
   option :json_config,
-         description: 'Configuration name',
+         description: 'Configuration section name',
          short: '-j JSONCONFIG',
          long: '--json JSONCONFIG',
          default: 'k8s'

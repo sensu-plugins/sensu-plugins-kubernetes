@@ -16,10 +16,20 @@
 #   gem: kube-client
 #
 # USAGE:
-# -s SERVER - The kubernates SERVER
-# -p PODS - REQUIRED, list of specific pods to check. Defaults to all
-# -w WARN - The time in seconds to warn on
-# -c CRIT - The time in seconds to flag as critical
+# -s, --api-server URL             URL to API server
+# -v, --api-version VERSION        API version. Defaults to 'v1'
+#     --in-cluster                 Use service account authentication
+#     --ca-file CA-FILE            CA file to verify API server cert
+#     --cert CERT-FILE             Client cert to present
+#     --key KEY-FILE               Client key for the client cert
+# -u, --user USER                  User with access to API
+#     --password PASSWORD          If user is passed, also pass a password
+#     --token TOKEN                Bearer token for authorization
+#     --token-file TOKEN-FILE      File containing bearer token for authorization
+# -c, --critical COUNT             Threshold for Pods to be critical
+# -f, --filter FILTER              Selector filter for pods to be checked
+# -p, --pods PODS                  List of pods to check
+# -w, --warn TIMEOUT               Threshold for pods to be in the pending state
 #
 # LICENSE:
 #   Barry Martin <nyxcharon@gmail.com>

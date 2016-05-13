@@ -16,11 +16,23 @@
 #   gem: kube-client
 #
 # USAGE:
-# -s SERVER - The kubernates SERVER
-# -p PODS - Optional, list of specific pods to check. Defaults to all
-# -t TIMEOUT - The timeout in seconds to warn on
-# -r COUNT - The number of restarts to warn on
-# -f FILTER - The selector filter to use to determine the pods to check
+# -s, --api-server URL             URL to API server
+# -v, --api-version VERSION        API version. Defaults to 'v1'
+#     --in-cluster                 Use service account authentication
+#     --ca-file CA-FILE            CA file to verify API server cert
+#     --cert CERT-FILE             Client cert to present
+#     --key KEY-FILE               Client key for the client cert
+# -u, --user USER                  User with access to API
+#     --password PASSWORD          If user is passed, also pass a password
+#     --token TOKEN                Bearer token for authorization
+#     --token-file TOKEN-FILE      File containing bearer token for authorization
+# -n NAMESPACES,                   Exclude the specified list of namespaces
+#     --exclude-namespace
+# -t, --timeout TIMEOUT            Threshold for pods to be in the pending state
+# -f, --filter FILTER              Selector filter for pods to be checked
+# -p, --pods PODS                  Optional list of pods to check.
+#                                  Defaults to 'all'
+# -r, --restart COUNT              Threshold for number of restarts allowed
 #
 # NOTES:
 # => The filter used for the -f flag is in the form key=value. If multiple

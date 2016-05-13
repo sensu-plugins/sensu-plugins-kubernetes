@@ -3,14 +3,46 @@ require 'uri'
 
 module Sensu
   module Plugins
+    # Namespace for the Kubernetes sensu-plugin.
     module Kubernetes
+      # A mixin module that provides Kubernetes client (kubeclient) support.
       module Client
+        # The location of the service account provided CA.
+        # (if the cluster is configured to provide it)
         INCLUSTER_CA_FILE =
           '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt'.freeze
 
+        # The location of the service account provided authentication token.
         INCLUSTER_TOKEN_FILE =
           '/var/run/secrets/kubernetes.io/serviceaccount/token'.freeze
 
+        # Creates a new Kubeclient::Client instance using the given SSL
+        # and authentication options (if any)
+        #
+        # @param [Hash] options The Kubernetes API connection details.
+        # @option options [String] :server URL to API server
+        # @option options [String] :version API version
+        # @option options [Boolean] :incluster
+        #   Use service account authentication if true
+        # @option options [String] :ca_file
+        #   CA file used to verify API server certificate
+        # @option options [String] :client_cert_file
+        #   Client certificate file to present
+        # @option options [String] :client_key_file
+        #   Client private key file for the client certificate
+        # @option options [String] :username
+        #   Username with access to API
+        # @option options [String] :password
+        #   If a username is passed, also pass a password
+        # @option options [String] :token
+        #   The bearer token for Kubernetes authorization
+        # @option options [String] :token_file
+        #   A file containing the bearer token for Kubernetes authorization
+        #
+        # @raise [ArgumentError] If an invalid option, or combination of options, is given.
+        # @raise [Errono::*] If there is a problem reading the client certificate or private key file.
+        # @raise [OpenSSL::X509::CertificateError] If there is a problem with the client certificate.
+        # @raise [OpenSSL::PKey::RSAError] If there is a problem with the client private key.
         def kubeclient(options = {})
           raise(ArgumentError, 'options must be a hash') unless options.is_a?(Hash)
 
@@ -85,7 +117,7 @@ module Sensu
                                    auth_options: auth_options)
           rescue URI::InvalidURIError => e
             # except for this one, which we'll re-wrap to make catching easier
-            raise ArgumentError, "Invalid API server: #{e.message}", e.backtrace
+            raise ArgumentError, "Invalid API server: #{e}", e.backtrace
           end
         end
       end
