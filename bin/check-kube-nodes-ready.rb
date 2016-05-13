@@ -16,8 +16,8 @@
 #   gem: kube-client
 #
 # USAGE:
-# -s SERVER - The kubernates SERVER
-# -v VERSION - The kubernates api VERSION. Defaults to v1
+# -s SERVER - The kubernetes SERVER
+# -v VERSION - The kubernetes api VERSION. Defaults to v1
 #
 # LICENSE:
 #   Kel Cecil <kelcecil@praisechaos.com>
@@ -25,33 +25,16 @@
 #   for details.
 #
 
-require 'sensu-plugin/check/cli'
+require 'sensu-plugins-kubernetes'
 require 'json'
-require 'kubeclient'
 
-class AllNodesAreReady < Sensu::Plugin::Check::CLI
-  option :api_server,
-         description: 'URL to API server',
-         short: '-s URL',
-         long: '--api-server',
-         default: ENV['KUBERNETES_MASTER']
+class AllNodesAreReady < Sensu::Plugins::Kubernetes::CLI
 
-  option :api_version,
-         description: 'API version',
-         short: '-v VERSION',
-         long: '--api-version',
-         default: 'v1'
+  @options = Sensu::Plugins::Kubernetes::CLI.options.dup
 
   def run
     cli = AllNodesAreReady.new
-    api_server = cli.config[:api_server]
-    api_version = cli.config[:api_version]
-
-    begin
-      client = Kubeclient::Client.new(api_server, api_version)
-    rescue
-      warning 'Unable to connect to Kubernetes API server'
-    end
+    client = self.get_client(cli)
 
     failed_nodes = []
     client.get_nodes.each do |node|

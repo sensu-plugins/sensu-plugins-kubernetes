@@ -27,23 +27,14 @@
 #   for details.
 #
 
-require 'sensu-plugin/check/cli'
+require 'sensu-plugins-kubernetes'
 require 'json'
 require 'kubeclient'
 require 'time'
 
 class AllServicesUp < Sensu::Plugin::Check::CLI
-  option :api_server,
-         description: 'URL to API server',
-         short: '-s URL',
-         long: '--api-server',
-         default: ENV['KUBERNETES_MASTER']
 
-  option :api_version,
-         description: 'API version',
-         short: '-v VERSION',
-         long: '--api-version',
-         default: 'v1'
+  @options = Sensu::Plugins::Kubernetes::CLI.options.dup
 
   option :service_list,
          description: 'List of services to check',
@@ -60,14 +51,7 @@ class AllServicesUp < Sensu::Plugin::Check::CLI
 
   def run
     cli = AllServicesUp.new
-    api_server = cli.config[:api_server]
-    api_version = cli.config[:api_version]
-
-    begin
-      client = Kubeclient::Client.new(api_server, api_version)
-    rescue
-      warning 'Unable to connect to Kubernetes API server'
-    end
+    client = self.get_client(cli)
 
     services = parse_list(cli.config[:service_list])
     failed_services = []
