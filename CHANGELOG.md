@@ -10,6 +10,7 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 - check-kube-service-available.rb: Fixed scope issue in main block that would cause a nil error
 - Factored all checks to share a common base class for connecting to Kubernetes
 - Added flags to specify certificate authority and Kubernetes bearer token
+- Added flags to specify client certificate/key and in-cluster support
 
 ## 0.0.1 - 2016-03-03
 ### Added

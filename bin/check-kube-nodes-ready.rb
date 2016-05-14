@@ -16,8 +16,16 @@
 #   gem: kube-client
 #
 # USAGE:
-# -s SERVER - The kubernetes SERVER
-# -v VERSION - The kubernetes api VERSION. Defaults to v1
+# -s, --api-server URL             URL to API server
+# -v, --api-version VERSION        API version. Defaults to 'v1'
+#     --in-cluster                 Use service account authentication
+#     --ca-file CA-FILE            CA file to verify API server cert
+#     --cert CERT-FILE             Client cert to present
+#     --key KEY-FILE               Client key for the client cert
+# -u, --user USER                  User with access to API
+# -p, --password PASSWORD          If user is passed, also pass a password
+# -t, --token TOKEN                Bearer token for authorization
+#     --token-file TOKEN-FILE      File containing bearer token for authorization
 #
 # LICENSE:
 #   Kel Cecil <kelcecil@praisechaos.com>
@@ -25,17 +33,12 @@
 #   for details.
 #
 
-require 'sensu-plugins-kubernetes'
-require 'json'
+require 'sensu-plugins-kubernetes/cli'
 
 class AllNodesAreReady < Sensu::Plugins::Kubernetes::CLI
-
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
 
   def run
-    cli = AllNodesAreReady.new
-    client = self.get_client(cli)
-
     failed_nodes = []
     client.get_nodes.each do |node|
       item = node.status.conditions.detect { |condition| condition.type == 'Ready' }
@@ -50,5 +53,7 @@ class AllNodesAreReady < Sensu::Plugins::Kubernetes::CLI
       ok 'All nodes are reporting as ready'
     end
     critical "Nodes are not ready: #{failed_nodes.join(' ')}"
+  rescue KubeException => e
+    critical 'API error: ' << e.message
   end
 end

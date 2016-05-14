@@ -16,8 +16,15 @@
 #   gem: kube-client
 #
 # USAGE:
-# -s SERVER - The kubernates SERVER
-# -v VERSION - The kubernates api VERSION. Defaults to v1
+# -s, --api-server URL             URL to API server
+#     --in-cluster                 Use service account authentication
+#     --ca-file CA-FILE            CA file to verify API server cert
+#     --cert CERT-FILE             Client cert to present
+#     --key KEY-FILE               Client key for the client cert
+# -u, --user USER                  User with access to API
+# -p, --password PASSWORD          If user is passed, also pass a password
+# -t, --token TOKEN                Bearer token for authorization
+#     --token-file TOKEN-FILE      File containing bearer token for authorization
 #
 # LICENSE:
 #   Kel Cecil <kelcecil@praisechaos.com>
@@ -25,31 +32,25 @@
 #   for details.
 #
 
-require 'sensu-plugin/check/cli'
-require 'net/http'
-require 'uri'
+require 'sensu-plugins-kubernetes/cli'
 
-class ApiServerIsAvailable < Sensu::Plugin::Check::CLI
-  option :api_server,
-         description: 'URL to API server',
-         short: '-s URL',
-         long: '--api-server',
-         default: ENV['KUBERNETES_MASTER']
+class ApiServerIsAvailable < Sensu::Plugins::Kubernetes::CLI
+  @options = Sensu::Plugins::Kubernetes::CLI.options.reject { |k| k == :api_version }
 
   def run
-    cli = ApiServerIsAvailable.new
-    api_server = cli.config[:api_server]
-    uri = URI.parse "#{api_server}/healthz"
-
-    begin
-      response = Net::HTTP.get_response(uri)
-    rescue
-      warning 'Host is unavailable'
-    end
-
-    if response.code.include? '200'
+    if healthy?
       ok 'Kubernetes API server is available'
     end
     critical 'Kubernetes API server is unavailable'
+  end
+
+  # TODO: replace this method when it's added to kubeclient
+  def healthy?
+    client.handle_exception do
+      client.create_rest_client('/healthz').get(client.headers)
+    end
+    true
+  rescue KubeException
+    false
   end
 end

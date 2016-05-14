@@ -16,11 +16,23 @@
 #   gem: kube-client
 #
 # USAGE:
-# -s SERVER - The kubernates SERVER
-# -p PODS - Optional, list of specific pods to check. Defaults to all
-# -t TIMEOUT - The timeout in seconds to warn on
-# -r COUNT - The number of restarts to warn on
-# -f FILTER - The selector filter to use to determine the pods to check
+# -s, --api-server URL             URL to API server
+# -v, --api-version VERSION        API version. Defaults to 'v1'
+#     --in-cluster                 Use service account authentication
+#     --ca-file CA-FILE            CA file to verify API server cert
+#     --cert CERT-FILE             Client cert to present
+#     --key KEY-FILE               Client key for the client cert
+# -u, --user USER                  User with access to API
+#     --password PASSWORD          If user is passed, also pass a password
+#     --token TOKEN                Bearer token for authorization
+#     --token-file TOKEN-FILE      File containing bearer token for authorization
+# -n NAMESPACES,                   Exclude the specified list of namespaces
+#     --exclude-namespace
+# -t, --timeout TIMEOUT            Threshold for pods to be in the pending state
+# -f, --filter FILTER              Selector filter for pods to be checked
+# -p, --pods PODS                  Optional list of pods to check.
+#                                  Defaults to 'all'
+# -r, --restart COUNT              Threshold for number of restarts allowed
 #
 # NOTES:
 # => The filter used for the -f flag is in the form key=value. If multiple
@@ -32,11 +44,9 @@
 #   for details.
 #
 
-require 'sensu-plugins-kubernetes'
-require 'json'
+require 'sensu-plugins-kubernetes/cli'
 
 class AllPodsAreReady < Sensu::Plugins::Kubernetes::CLI
-
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
 
   option :pod_list,
@@ -72,18 +82,15 @@ class AllPodsAreReady < Sensu::Plugins::Kubernetes::CLI
          default: ''
 
   def run
-    cli = AllPodsAreReady.new
-    client = self.get_client(cli)
-
     pods_list = []
     failed_pods = []
     restarted_pods = []
     pods = []
-    if cli.config[:pod_filter].nil?
-      pods_list = parse_list(cli.config[:pod_list])
+    if config[:pod_filter].nil?
+      pods_list = parse_list(config[:pod_list])
       pods = client.get_pods
     else
-      pods = client.get_pods(label_selector: cli.config[:pod_filter].to_s)
+      pods = client.get_pods(label_selector: config[:pod_filter].to_s)
       if pods.empty?
         unknown 'The filter specified resulted in 0 pods'
       end
@@ -91,19 +98,19 @@ class AllPodsAreReady < Sensu::Plugins::Kubernetes::CLI
     end
     pods.each do |pod|
       next if pod.nil?
-      next if cli.config[:exclude_namespace].include?(pod.metadata.namespace)
+      next if config[:exclude_namespace].include?(pod.metadata.namespace)
       next unless pods_list.include?(pod.metadata.name) || pods_list.include?('all')
       # Check for pending state
       if pod.status.phase == 'Pending'
         pod_stamp = Time.parse(pod.metadata.creationTimestamp)
-        if (Time.now.utc - pod_stamp.utc).to_i > cli.config[:pending_timeout]
+        if (Time.now.utc - pod_stamp.utc).to_i > config[:pending_timeout]
           failed_pods << pod.metadata.name
         end
       end
       # Check restarts
       next if pod.status.containerStatuses.nil?
       pod.status.containerStatuses.each do |container|
-        if container.restartCount.to_i > cli.config[:restart_count]
+        if container.restartCount.to_i > config[:restart_count]
           restarted_pods << container.name
         end
       end
@@ -112,12 +119,14 @@ class AllPodsAreReady < Sensu::Plugins::Kubernetes::CLI
     if failed_pods.empty? && restarted_pods.empty?
       ok 'All pods are reporting as ready'
     elsif failed_pods.empty?
-      critical "Pods  exceeded restart threshold: #{restarted_pods.join(' ')}"
+      critical "Pods exceeded restart threshold: #{restarted_pods.join(' ')}"
     elsif restarted_pods.empty?
-      critical "Pods  exceeded pending threshold: #{failed_pods.join(' ')}"
+      critical "Pods exceeded pending threshold: #{failed_pods.join(' ')}"
     else
       critical "Pod restart and pending thresholds exceeded, pending: #{failed_pods.join(' ')} restarting: #{restarted_pods.join(' ')}"
     end
+  rescue KubeException => e
+    critical 'API error: ' << e.message
   end
 
   def parse_list(list)
