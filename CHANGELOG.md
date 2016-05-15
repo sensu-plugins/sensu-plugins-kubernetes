@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachangelog.com/)
 
 ## [Unreleased]
+- check-kube-service-available.rb: Allow checking of all services by default. Services without a selector will be checked for an  endpoint.
 
 ## [0.1.0] - 2016-05-15
 ### Added

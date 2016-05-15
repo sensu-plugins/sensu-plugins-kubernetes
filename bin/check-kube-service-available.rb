@@ -26,7 +26,7 @@
 #     --password PASSWORD          If user is passed, also pass a password
 #     --token TOKEN                Bearer token for authorization
 #     --token-file TOKEN-FILE      File containing bearer token for authorization
-# -l, --list SERVICES              List of services to check (required)
+# -l, --list SERVICES              List of services to check. Defaults to 'all'
 # -p, --pending SECONDS            Time (in seconds) a pod may be pending for and be valid
 #
 # NOTES:
@@ -43,11 +43,16 @@ require 'time'
 class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
 
+  # TODO: service filter option?
+
+  # TODO: support namespaces in service list
+  #       (ie, [<ns>:]<service_name> ??)
+  # TODO: also add ns support to pod lists in other scripts
   option :service_list,
          description: 'List of services to check',
          short: '-l SERVICES',
          long: '--list',
-         required: true
+         default: nil
 
   option :pendingTime,
          description: 'Time (in seconds) a pod may be pending for and be valid',
@@ -57,65 +62,87 @@ class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
          proc: proc(&:to_i)
 
   def run
-    services = parse_list(config[:service_list])
+    service_list = parse_list(config[:service_list])
+    all_services = service_list.empty?
+
     failed_services = []
-    s = client.get_services
-    s.each do |a|
-      next unless services.include?(a.metadata.name)
-      # Build the selector key so we can fetch the corresponding pod
-      selector_key = []
-      services.delete(a.metadata.name)
-      a.spec.selector.to_h.each do |k, v|
-        selector_key << "#{k}=#{v}"
-      end
-      # Get the pod
-      pod = nil
-      begin
-        pod = client.get_pods(label_selector: selector_key.join(',').to_s)
-      rescue
-        failed_services << a.metadata.name.to_s
-      end
-      # Make sure our pod is running
-      next if pod.nil?
-      pod_available = false
-      pod.each do |p|
-        case p.status.phase
-        when 'Pending'
-          next if p.status.startTime.nil?
-          if (Time.now - Time.parse(p.status.startTime)).to_i < config[:pendingTime]
-            pod_available = True
-            break
-          end
-        when 'Running'
-          p.status.conditions.each do |c|
-            next unless c.type == 'Ready'
-            if c.status == 'True'
-              pod_available = true
-              break
-            end
-            break if pod_available
-          end
-        end
-        failed_services << p.metadata.name if pod_available == false
-      end
+
+    client.get_services.each do |service|
+      service_name = service.metadata.name
+
+      next unless all_services || service_list.include?(service_name)
+      service_list.delete(service_name)
+
+      service_ok = if service.spec.selector.nil?
+                     # Selector-less services rely on manually set endpoints,
+                     # so we will verify that at least one endpoint exists.
+                     endpoint_available?(service)
+                   else
+                     # Services with selectors should have pods at the backend,
+                     # so we will verify those pod(s) are running
+                     # (or pending withing the time limit)
+                     pod_available?(service)
+                     # TODO: Should we just rely on kubernetes endpoint management as
+                     # pods pass/fail their readiness checks and just check the endpoints?
+                   end
+
+      failed_services << service_name unless service_ok
+
+      # Exit early if we've checked all the services we were explicitly asked to
+      break if !all_services && service_list.empty?
     end
 
-    if failed_services.empty? && services.empty?
-      ok 'All services are reporting as up'
-    end
-
-    if !failed_services.empty?
+    unless failed_services.empty?
       critical "All services are not ready: #{failed_services.join(' ')}"
-    else
-      critical "Some services could not be checked: #{services.join(' ')}"
     end
+
+    unless service_list.empty?
+      critical "Some services could not be checked: #{service_list.join(' ')}"
+    end
+
+    ok 'All services are reporting as up'
   rescue KubeException => e
     critical 'API error: ' << e.message
   end
 
   def parse_list(list)
     return list.split(',') if list && list.include?(',')
-    return [list] if list
-    ['']
+    return [list] if list && list != 'all'
+    []
+  end
+
+  def endpoint_available?(service)
+    !client.get_endpoint(service.metadata.name, service.metadata.namespace).empty?
+  rescue KubeException
+    # TODO: log?
+    false
+  end
+
+  def pod_available?(service)
+    pod_available = false
+    selector = service.spec.selector.to_h.map { |k, v| "#{k}=#{v}" }.join(',')
+    client.get_pods(label_selector: selector).each do |pod|
+      case pod.status.phase
+      when 'Pending'
+        next if pod.status.startTime.nil?
+        if (Time.now - Time.parse(pod.status.startTime)).to_i < config[:pendingTime]
+          pod_available = true
+          break # out of client pod loop
+        end
+      when 'Running'
+        pod.status.conditions.each do |condition|
+          next unless condition.type == 'Ready'
+          if condition.status == 'True'
+            pod_available = true
+            break # out of condition loop
+          end
+        end
+        break if pod_available # out of client pod loop
+      end
+    end
+    pod_available
+  rescue KubeException
+    # TODO: log?
+    false
   end
 end
