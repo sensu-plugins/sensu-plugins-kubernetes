@@ -27,3 +27,4 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 - initial release
 
 [Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/0.0.1...HEAD
+[0.1.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/0.0.1...0.1.0
