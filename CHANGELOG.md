@@ -5,6 +5,9 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 
 ## [Unreleased]
 
+### Fixed
+- cli.rb: Fixed typo in critical call
+
 ## [0.1.0] - 2016-05-15
 ### Added
 - Added flag to ignore namespaces in check-kube-pods-pending
