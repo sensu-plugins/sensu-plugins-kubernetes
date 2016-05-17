@@ -87,7 +87,7 @@ module Sensu
               token_file: config[:api_token_file]
             )
           rescue ArgumentError => e
-            critial e.message
+            critical e.message
           end
         end
       end
