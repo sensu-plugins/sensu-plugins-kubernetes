@@ -83,7 +83,7 @@ Usage: check-kube-service-available.rb (options)
     -u, --user USER                  User with access to API
     -v, --api-version VERSION        API version
     -p, --pending SECONDS            Time (in seconds) a pod may be pending for and be valid
-    -l, --list SERVICES              List of services to check (required)
+    -l, --list SERVICES              List of services to check. Defaults to 'all'
 ```
 
 **check-kube-pods-runtime.rb**
