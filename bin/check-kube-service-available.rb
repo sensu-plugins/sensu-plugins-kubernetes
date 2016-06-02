@@ -96,7 +96,7 @@ class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
             break if pod_available
           end
         end
-        failed_services << p.metadata.name if pod_available == false
+        failed_services << "#{p.metadata.namespace}.#{p.metadata.name}" if pod_available == false
       end
     end
 

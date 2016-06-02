@@ -5,6 +5,11 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 
 ## [Unreleased]
 
+## [0.1.2] - 2016-05-27
+### Changed
+- check-kube-pods-pending.rb: Add namespace to output
+- check-kube-service-available.rb: Add namespace to output
+
 ## [0.1.1] - 2016-05-17
 ### Fixed
 - cli.rb: Fixed typo in critical call

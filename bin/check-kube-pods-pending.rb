@@ -104,14 +104,14 @@ class AllPodsAreReady < Sensu::Plugins::Kubernetes::CLI
       if pod.status.phase == 'Pending'
         pod_stamp = Time.parse(pod.metadata.creationTimestamp)
         if (Time.now.utc - pod_stamp.utc).to_i > config[:pending_timeout]
-          failed_pods << pod.metadata.name
+          failed_pods << "#{pod.metadata.namespace}.#{pod.metadata.name}"
         end
       end
       # Check restarts
       next if pod.status.containerStatuses.nil?
       pod.status.containerStatuses.each do |container|
         if container.restartCount.to_i > config[:restart_count]
-          restarted_pods << container.name
+          restarted_pods << "#{pod.metadata.namespace}.#{container.name}"
         end
       end
     end
