@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachangelog.com/)
 
 ## [Unreleased]
+### Fixed
+- check-kube-service-available.rb: fixed error caused by misspelling of true boolean
 
 ## [0.1.2] - 2016-05-27
 ### Changed
@@ -17,7 +19,7 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 ## [0.1.0] - 2016-05-15
 ### Added
 - Added flag to ignore namespaces in check-kube-pods-pending
-- check-kube-service-available.rb: Will not mark a service is failed if any needed pod is running and ready
+- check-kube-service-available.rb: Will not mark a service as failed if any needed pod is running and ready
 - check-kube-service-available.rb: Added options to allow of pod pending for given time to be counted as valid
 - Factored all checks to share a common base class for connecting to Kubernetes
 - Added flags to specify certificate authority and Kubernetes bearer token
