@@ -11,6 +11,7 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 ### Changed
 - check-kube-pods-pending.rb: Add namespace to output
 - check-kube-service-available.rb: Add namespace to output
+- pin `activesupport` to `< 5.0.0` to maintain compatability with Ruby < 2.2
 
 ## [0.1.1] - 2016-05-17
 ### Fixed
