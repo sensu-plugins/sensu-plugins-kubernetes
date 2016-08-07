@@ -83,7 +83,7 @@ class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
         when 'Pending'
           next if p.status.startTime.nil?
           if (Time.now - Time.parse(p.status.startTime)).to_i < config[:pendingTime]
-            pod_available = True
+            pod_available = true
             break
           end
         when 'Running'
