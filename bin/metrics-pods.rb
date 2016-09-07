@@ -51,7 +51,7 @@ class PodsMetrics < Sensu::Plugins::Kubernetes::CLI
       next if pod.nil?
       pod.each do |p|
         puts p.metadata.name
-        puts p.metadata.service
+        puts s.metadata.name
       end
     end
   end
