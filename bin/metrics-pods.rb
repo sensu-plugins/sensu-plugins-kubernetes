@@ -24,9 +24,15 @@
 #   Released under the same terms as Sensu (the MIT license); see LICENSE
 #   for details.
 require 'sensu-plugins-kubernetes/cli'
+require 'socket'
 
 class PodsMetrics < Sensu::Plugins::Kubernetes::CLI
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
+  option :scheme,
+       description: 'Metric naming scheme, text to prepend to metric',
+       short: '-s SCHEME',
+       long: '--scheme SCHEME',
+       default: "#{Socket.gethostname}.pod"
 
   def run
     pod_counts = []
@@ -48,11 +54,11 @@ class PodsMetrics < Sensu::Plugins::Kubernetes::CLI
       next if pod.nil?
       pod.each do |p|
         count[s.metadata.name] += 1
-        #puts p.metadata.name
-        #puts s.metadata.name
       end
     end
+    count.size.times { |k,v| output "#{config[:scheme]}.#{k}", v}
     puts "DEBUG #{count}"
+    puts "DEBUG #{output}"
     ok
   end
 
