@@ -60,10 +60,4 @@ class PodsMetrics < Sensu::Plugins::Kubernetes::CLI
     ok
   end
 
-  def parse_list(list)
-    return list.split(',') if list && list.include?(',')
-    return [list] if list
-    ['']
-  end
-
 end
