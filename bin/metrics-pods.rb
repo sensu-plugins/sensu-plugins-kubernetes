@@ -24,6 +24,7 @@
 #   Released under the same terms as Sensu (the MIT license); see LICENSE
 #   for details.
 require 'sensu-plugins-kubernetes/cli'
+require 'sensu-plugin/metric/cli'
 require 'socket'
 
 class PodsMetrics < Sensu::Plugin::Metric::CLI::Graphite
