@@ -26,17 +26,17 @@
 require 'sensu-plugins-kubernetes/cli'
 require 'socket'
 
-class PodsMetrics < Sensu::Plugins::Kubernetes::CLI
+class PodsMetrics < Sensu::Plugin::Metric::CLI::Graphite
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
   option :scheme,
        description: 'Metric naming scheme, text to prepend to metric',
-       short: '-s SCHEME',
        long: '--scheme SCHEME',
        default: "#{Socket.gethostname}.pods"
 
   def run
     pod_counts = []
     count = Hash.new
+    client = Sensu::Plugins::Kubernetes::CLI.new.client
     services = client.get_services
     services.each do |s|
       selector_key = []
