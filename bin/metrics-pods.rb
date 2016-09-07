@@ -32,7 +32,7 @@ class PodsMetrics < Sensu::Plugin::Metric::CLI::Graphite
   option :scheme,
        description: 'Metric naming scheme, text to prepend to metric',
        long: '--scheme SCHEME',
-       default: "#{URI.parse(config[:api_server]).host}.pods"
+       default: "#{URI.parse(options[:api_server]).host}.pods"
 
   def run
     pod_counts = []
