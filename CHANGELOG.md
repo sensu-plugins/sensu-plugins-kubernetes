@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachangelog.com/)
 
 ## [Unreleased]
+### Added
+- Added metrics-pods.rb that will output the number of running pods per service
 
 ## [0.1.2] - 2016-08-07
 ### Fixed
