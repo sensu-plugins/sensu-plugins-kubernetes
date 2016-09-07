@@ -35,10 +35,10 @@ class PodsMetrics < Sensu::Plugins::Kubernetes::CLI
 
   def run
     services = client.get_services
-    s.each do |a|
+    services.each do |s|
       selector_key = []
-      services.delete(a.metadata.name)
-      a.spec.selector.to_h.each do |k,v|
+      services.delete(s.metadata.name)
+      s.spec.selector.to_h.each do |k,v|
         selector_key << "#{k}=#{v}"
       end
       pod = nil
