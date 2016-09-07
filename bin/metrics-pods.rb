@@ -28,7 +28,12 @@ require 'socket'
 
 class PodsMetrics < Sensu::Plugins::Kubernetes::CLI
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
-  
+  option :scheme,
+       description: 'Metric naming scheme, text to prepend to metric',
+       short: '-s SCHEME',
+       long: '--scheme SCHEME',
+       default: "#{Socket.gethostname}.pods"
+
   def run
     pod_counts = []
     count = Hash.new
