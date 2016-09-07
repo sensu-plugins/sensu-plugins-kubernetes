@@ -3,6 +3,7 @@
 #   pod-metrics
 #
 # DESCRIPTION:
+#   Will give pod counts from all the exposed services
 #
 # OUTPUT:
 #   metric data
@@ -27,13 +28,9 @@ require 'sensu-plugins-kubernetes/cli'
 class PodsMetrics < Sensu::Plugins::Kubernetes::CLI
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
 
-#  option :service_list,
-#         description: 'List of services to check',
-#         short: '-l SERVICES',
-#         long: '--list',
-#         required: true
-
   def run
+    pod_counts = []
+    count = Hash.new
     services = client.get_services
     services.each do |s|
       selector_key = []
@@ -42,7 +39,6 @@ class PodsMetrics < Sensu::Plugins::Kubernetes::CLI
         selector_key << "#{k}=#{v}"
       end
       pod = nil
-      count = 0
       begin
         pod = client.get_pods(label_selector: selector_key.join(',').to_s)
       rescue
@@ -50,10 +46,13 @@ class PodsMetrics < Sensu::Plugins::Kubernetes::CLI
       end
       next if pod.nil?
       pod.each do |p|
-        puts p.metadata.name
-        puts s.metadata.name
+        count[s.metadata.name] += 1
+        #puts p.metadata.name
+        #puts s.metadata.name
       end
     end
+    puts "DEBUG #{count}"
+    ok
   end
 
   def parse_list(list)
