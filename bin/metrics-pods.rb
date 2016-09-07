@@ -56,7 +56,7 @@ class PodsMetrics < Sensu::Plugins::Kubernetes::CLI
         count[s.metadata.name] += 1
       end
     end
-    count.size.times { |k,v| output "#{config[:scheme]}.#{k}", v}
+    count.each {|k,v| output "#{config[:scheme]}.#{k}", v}
     puts "DEBUG #{count}"
     ok
   end
