@@ -32,15 +32,14 @@ class PodsMetrics < Sensu::Plugin::Metric::CLI::Graphite
 
   def run
     config[:scheme] = "#{URI(config[:api_server]).host}.pods"
-    pod_counts = []
-    count = Hash.new
+    count = {}
     client = Sensu::Plugins::Kubernetes::CLI.new.client
     services = client.get_services
     services.each do |s|
       selector_key = []
       count[s.metadata.name] = 0
       services.delete(s.metadata.name)
-      s.spec.selector.to_h.each do |k,v|
+      s.spec.selector.to_h.each do |k, v|
         selector_key << "#{k}=#{v}"
       end
       pod = nil
@@ -50,12 +49,11 @@ class PodsMetrics < Sensu::Plugin::Metric::CLI::Graphite
         puts 'There was an error'
       end
       next if pod.nil?
-      pod.each do |p|
+      pod.each do
         count[s.metadata.name] += 1
       end
     end
-    count.each {|k,v| output "#{config[:scheme]}.#{k}", v}
+    count.each { |k, v| output "#{config[:scheme]}.#{k}", v }
     ok
   end
-
 end
