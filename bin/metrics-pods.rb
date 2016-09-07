@@ -27,11 +27,11 @@ require 'sensu-plugins-kubernetes/cli'
 class PodsMetrics < Sensu::Plugins::Kubernetes::CLI
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
 
-  option :service_list,
-         description: 'List of services to check',
-         short: '-l SERVICES',
-         long: '--list',
-         required: true
+#  option :service_list,
+#         description: 'List of services to check',
+#         short: '-l SERVICES',
+#         long: '--list',
+#         required: true
 
   def run
     services = client.get_services
