@@ -33,7 +33,6 @@ class PodsMetrics < Sensu::Plugins::Kubernetes::CLI
        short: '-s SCHEME',
        long: '--scheme SCHEME',
        default: "#{Socket.gethostname}.pod"
-
   def run
     pod_counts = []
     count = Hash.new
@@ -56,9 +55,7 @@ class PodsMetrics < Sensu::Plugins::Kubernetes::CLI
         count[s.metadata.name] += 1
       end
     end
-    #count.size.times { |k,v| output "#{config[:scheme]}.#{k}", v}
     puts "DEBUG #{count}"
-    #puts "DEBUG #{output}"
     ok
   end
 
