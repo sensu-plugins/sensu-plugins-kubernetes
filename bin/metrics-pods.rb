@@ -29,12 +29,9 @@ require 'uri'
 
 class PodsMetrics < Sensu::Plugin::Metric::CLI::Graphite
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
-  option :scheme,
-       description: 'Metric naming scheme, text to prepend to metric',
-       long: '--scheme SCHEME',
-       default: "#{options[:api_server]}.pods"
 
   def run
+    config[:scheme] = "#{URI(config[:api_server]).host}.pods"
     pod_counts = []
     count = Hash.new
     client = Sensu::Plugins::Kubernetes::CLI.new.client
