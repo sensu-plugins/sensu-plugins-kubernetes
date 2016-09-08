@@ -45,8 +45,8 @@ class PodsMetrics < Sensu::Plugin::Metric::CLI::Graphite
       pod = nil
       begin
         pod = client.get_pods(label_selector: selector_key.join(',').to_s)
-      rescue
-        puts 'There was an error'
+      rescue KubeException => e
+        critical 'API error: ' << e.message
       end
       next if pod.nil?
       pod.each do
