@@ -16,6 +16,7 @@ This provides functionality to check node and pod status as well as api and serv
 - bin/check-kube-service-available.rb
 - bin/check-kube-pods-runtime.rb
 - bin/handler-kube-pod.rb
+- bin/metrics-pods.rb
 
 ## Usage
 
@@ -128,6 +129,21 @@ Usage: handler-kube-pod.rb (options)
         "token_file": "/secret/token"
     }
 }
+```
+
+**metrics-pods**
+```
+Usage: metrics-pods.rb (options)
+        --ca-file CA-FILE            CA file to verify API server cert
+        --cert CERT-FILE             Client cert to present
+        --key KEY-FILE               Client key for the client cert
+        --in-cluster                 Use service account authentication
+        --password PASSWORD          If user is passed, also pass a password
+        -s, --api-server URL             URL to API server
+        -t, --token TOKEN                Bearer token for authorization
+        --token-file TOKEN-FILE      File containing bearer token for authorization
+        -u, --user USER                  User with access to API
+        -v, --api-version VERSION        API version
 ```
 
 `api_server` and `api_version` can still be used for backwards compatibility,
