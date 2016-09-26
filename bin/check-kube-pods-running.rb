@@ -66,7 +66,6 @@ class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
   def run
     pods_list = []
     failed_pods = []
-    restarted_pods = []
     pods = []
     if config[:pod_filter].nil?
       pods_list = parse_list(config[:pod_list])
@@ -82,10 +81,9 @@ class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
       next if pod.nil?
       next if config[:exclude_namespace].include?(pod.metadata.namespace)
       next unless pods_list.include?(pod.metadata.name) || pods_list.include?('all')
-      if pod.status.phase != 'Succeeded' && pod.status.conditions != nil
-        if pod.status.conditions[1].status == 'False' #This is the Ready state
-          failed_pods << pod.metadata.name
-        end
+      next unless pod.status.phase != 'Succeeded' && !pod.status.conditions.nil?
+      if pod.status.conditions[1].status == 'False' # This is the Ready state
+        failed_pods << pod.metadata.name
       end
     end
 
