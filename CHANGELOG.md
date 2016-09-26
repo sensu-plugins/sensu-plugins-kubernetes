@@ -6,6 +6,7 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 ## [Unreleased]
 ### Added
 - Added metrics-pods.rb that will output the number of running pods per service
+- Added check-kube-pods-running check
 
 ## [0.1.2] - 2016-08-07
 ### Fixed
