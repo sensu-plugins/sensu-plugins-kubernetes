@@ -15,23 +15,21 @@
 #   gem: sensu-plugin
 #   gem: kube-client
 #
-# USAGE:
-# -s, --api-server URL             URL to API server
-# -v, --api-version VERSION        API version. Defaults to 'v1'
-#     --in-cluster                 Use service account authentication
-#     --ca-file CA-FILE            CA file to verify API server cert
-#     --cert CERT-FILE             Client cert to present
-#     --key KEY-FILE               Client key for the client cert
-# -u, --user USER                  User with access to API
-#     --password PASSWORD          If user is passed, also pass a password
-#     --token TOKEN                Bearer token for authorization
-#     --token-file TOKEN-FILE      File containing bearer token for authorization
-# -n NAMESPACES,                   Exclude the specified list of namespaces
-#     --exclude-namespace
-# -f, --filter FILTER              Selector filter for pods to be checked
-# -p, --pods PODS                  Optional list of pods to check.
-#                                  Defaults to 'all'
-#
+# Usage: ./check-kube-pods-running.rb (options)
+#         --ca-file CA-FILE            CA file to verify API server cert
+#         --cert CERT-FILE             Client cert to present
+#         --key KEY-FILE               Client key for the client cert
+#         --in-cluster                 Use service account authentication
+#         --password PASSWORD          If user is passed, also pass a password
+#     -s, --api-server URL             URL to API server
+#     -t, --token TOKEN                Bearer token for authorization
+#         --token-file TOKEN-FILE      File containing bearer token for authorization
+#     -u, --user USER                  User with access to API
+#     -v, --api-version VERSION        API version
+#     -n NAMESPACES,                   Exclude the specified list of namespaces
+#         --exclude-namespace
+#     -f, --filter FILTER              Selector filter for pods to be checked
+#     -p, --pods PODS                  List of pods to check
 # NOTES:
 # => The filter used for the -f flag is in the form key=value. If multiple
 #    filters need to be specfied, use a comma. ex. foo=bar,red=color
@@ -44,7 +42,7 @@
 
 require 'sensu-plugins-kubernetes/cli'
 
-class AllPodsAreReady < Sensu::Plugins::Kubernetes::CLI
+class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
 
   option :pod_list,

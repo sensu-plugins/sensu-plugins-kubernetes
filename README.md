@@ -15,6 +15,7 @@ This provides functionality to check node and pod status as well as api and serv
 - bin/check-kube-pods-pending.rb
 - bin/check-kube-service-available.rb
 - bin/check-kube-pods-runtime.rb
+- bin/check-kube-pods-running.rb
 - bin/handler-kube-pod.rb
 - bin/metrics-pods.rb
 
@@ -104,6 +105,25 @@ Usage: check-kube-pods-runtime.rb (options)
     -f, --filter FILTER              Selector filter for pods to be checked
     -p, --pods PODS                  List of pods to check
     -w, --warn TIMEOUT               Threshold for pods to be in the pending state
+```
+
+**check-kube-pods-running.rb**
+```
+Usage: ./check-kube-pods-running.rb (options)
+        --ca-file CA-FILE            CA file to verify API server cert
+        --cert CERT-FILE             Client cert to present
+        --key KEY-FILE               Client key for the client cert
+        --in-cluster                 Use service account authentication
+        --password PASSWORD          If user is passed, also pass a password
+    -s, --api-server URL             URL to API server
+    -t, --token TOKEN                Bearer token for authorization
+        --token-file TOKEN-FILE      File containing bearer token for authorization
+    -u, --user USER                  User with access to API
+    -v, --api-version VERSION        API version
+    -n NAMESPACES,                   Exclude the specified list of namespaces
+        --exclude-namespace
+    -f, --filter FILTER              Selector filter for pods to be checked
+    -p, --pods PODS                  List of pods to check
 ```
 
 **handler-kube-pod.rb**
