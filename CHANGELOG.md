@@ -7,6 +7,8 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 ### Added
 - Added metrics-pods.rb that will output the number of running pods per service
 - Added check-kube-pods-running check
+- Split check-kube-pods-pending into two checks; the original still checks for
+pending pods, the restart count portion has been split into it's own check.
 
 ## [0.1.2] - 2016-08-07
 ### Fixed
