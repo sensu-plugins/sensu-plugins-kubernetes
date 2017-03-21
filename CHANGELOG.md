@@ -1,9 +1,11 @@
-#Change Log
+# Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachangelog.com/)
 
 ## [Unreleased]
+
+## [1.0.0] - 2017-03-21
 ### Added
 - Add `metrics-pods.rb` that will output the number of running pods per service (@mickfeech)
 - Add `check-kube-pods-running` check (@nyxcharon)
@@ -47,7 +49,8 @@ pending pods, the restart count portion has been split into it's own check, `che
 ### Added
 - initial release
 
-[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/0.1.2...HEAD
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/1.0.0...HEAD
+[1.0.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/0.1.2...1.0.0
 [0.1.2]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/0.1.1...0.1.2
 [0.1.1]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/0.0.1...0.1.0
