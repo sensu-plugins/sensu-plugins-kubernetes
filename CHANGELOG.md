@@ -5,10 +5,13 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 
 ## [Unreleased]
 ### Added
-- Added metrics-pods.rb that will output the number of running pods per service
-- Added check-kube-pods-running check
-- Split check-kube-pods-pending into two checks; the original still checks for
-pending pods, the restart count portion has been split into it's own check.
+- Add `metrics-pods.rb` that will output the number of running pods per service (@mickfeech)
+- Add `check-kube-pods-running` check (@nyxcharon)
+
+### Changed
+- Update to `kubeclient` 2.3.0 (@jackfengji)
+- Split `check-kube-pods-pending` into two checks; the original still checks for
+pending pods, the restart count portion has been split into it's own check, `check-kube-pods-restarting`. (@nyxcharon)
 
 ## [0.1.2] - 2016-08-07
 ### Fixed
