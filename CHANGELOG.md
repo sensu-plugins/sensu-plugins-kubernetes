@@ -9,7 +9,7 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 - Add `check-kube-pods-running` check (@nyxcharon)
 
 ### Changed
-- Update to `kubeclient` 2.3.0 (@jackfengji)
+- Update `kubeclient` to 2.3.0 (@jackfengji)
 - Split `check-kube-pods-pending` into two checks; the original still checks for
 pending pods, the restart count portion has been split into it's own check, `check-kube-pods-restarting`. (@nyxcharon)
 
