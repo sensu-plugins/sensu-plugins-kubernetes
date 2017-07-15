@@ -24,5 +24,5 @@
 
 #### Purpose
 
-#### Known Compatablity Issues
+#### Known Compatibility Issues
 
