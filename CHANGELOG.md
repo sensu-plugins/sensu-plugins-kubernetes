@@ -6,6 +6,7 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 ## [Unreleased]
 ### Added
 - Ruby 2.4.1 testing
+- Add option to use kubeconfig file for auth and TLS (@jaxxstorm)
 
 ## [1.0.0] - 2017-03-21
 ### Added
