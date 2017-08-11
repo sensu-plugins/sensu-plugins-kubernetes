@@ -236,3 +236,5 @@ Only one of the authentication methods (user, token, or token file) can be used.
 For example, using a username and a token, or a token and a token file, will produce an error.
 
 If the 'user' authentication method is used, a password must also be provided.
+
+The kubeconfig options enable the usage of a kubeconfig file, which is a yaml file which defines the authentication and TLS config. More information about kubeconfig files can be found in the [Kubernetes Docs](https://kubernetes.io/docs/tasks/access-application-cluster/authenticate-across-clusters-kubeconfig/)
