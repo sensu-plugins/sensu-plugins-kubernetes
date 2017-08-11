@@ -38,6 +38,8 @@ module Sensu
         #   The bearer token for Kubernetes authorization
         # @option options [String] :token_file
         #   A file containing the bearer token for Kubernetes authorization
+        # @option options [String] :kube_config
+        #   A file containing kubeconfig yaml configuration
         #
         # @raise [ArgumentError] If an invalid option, or combination of options, is given.
         # @raise [Errono::*] If there is a problem reading the client certificate or private key file.
@@ -46,18 +48,32 @@ module Sensu
         def kubeclient(options = {})
           raise(ArgumentError, 'options must be a hash') unless options.is_a?(Hash)
 
-          api_server = options[:server]
-          api_version = options[:version]
+          if options[:kube_config]
+            begin
+              config = Kubeclient::Config.read(options[:kube_config])
 
-          ssl_options = {
-            ca_file: options[:ca_file]
-          }
-          auth_options = {
-            username: options[:username],
-            password: options[:password],
-            bearer_token: options[:token],
-            bearer_token_file: options[:token_file]
-          }
+              api_server = config.context.api_endpoint
+              api_version = config.context.api_version
+
+              ssl_options = config.context.ssl_options
+              auth_options = config.context.auth_options
+            rescue => e
+              raise e, "Unable to read kubeconfig: #{e}", e.backtrace
+            end
+          else
+            api_server = options[:server]
+            api_version = options[:version]
+
+            ssl_options = {
+              ca_file: options[:ca_file]
+            }
+            auth_options = {
+              username: options[:username],
+              password: options[:password],
+              bearer_token: options[:token],
+              bearer_token_file: options[:token_file]
+            }
+          end
 
           if [:client_cert_file, :client_key_file].count { |k| options[k] } == 1
             raise ArgumentError, 'SSL requires both client cert and client key'

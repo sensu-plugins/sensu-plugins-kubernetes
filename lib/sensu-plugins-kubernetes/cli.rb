@@ -66,6 +66,11 @@ module Sensu
                long: '--token-file TOKEN-FILE',
                default: nil
 
+        option :kube_config,
+               description: 'Path to a kube config file',
+               long: '--kube-config KUBECONFIG',
+               default: nil
+
         attr_reader :client
 
         # Initializes the Sensu check by creating a Kubernetes client
@@ -84,7 +89,8 @@ module Sensu
               username: config[:api_user],
               password: config[:api_password],
               token: config[:api_token],
-              token_file: config[:api_token_file]
+              token_file: config[:api_token_file],
+              kube_config: config[:kube_config]
             )
           rescue ArgumentError => e
             critical e.message
