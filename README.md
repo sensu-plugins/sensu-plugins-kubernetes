@@ -68,6 +68,8 @@ Usage: check-kube-pods-pending.rb (options)
     -v, --api-version VERSION        API version
     -n NAMESPACES,                   Exclude the specified list of namespaces
         --exclude-namespace
+    -i NAMESPACES,                   Include the specified list of namespaces, an 
+        --include-namespace          empty list includes all namespaces
     -t, --timeout TIMEOUT            Threshold for pods to be in the pending state
     -f, --filter FILTER              Selector filter for pods to be checked
     -p, --pods PODS                  List of pods to check
@@ -128,6 +130,8 @@ Usage: ./check-kube-pods-running.rb (options)
     -v, --api-version VERSION        API version
     -n NAMESPACES,                   Exclude the specified list of namespaces
         --exclude-namespace
+    -i NAMESPACES,                   Include the specified list of namespaces, an 
+        --include-namespace          empty list includes all namespaces
     -f, --filter FILTER              Selector filter for pods to be checked
     -p, --pods PODS                  List of pods to check
         --kube-config KUBECONFIG     Path to a kube config file
@@ -149,6 +153,8 @@ Usage: ./check-kube-pods-restarting.rb (options)
     -v, --api-version VERSION        API version
     -n NAMESPACES,                   Exclude the specified list of namespaces
         --exclude-namespace
+    -i NAMESPACES,                   Include the specified list of namespaces, an 
+        --include-namespace          empty list includes all namespaces
     -f, --filter FILTER              Selector filter for pods to be checked
     -p, --pods PODS                  List of pods to check
     -r, --restart COUNT              Threshold for number of restarts allowed

@@ -28,6 +28,8 @@
 #    -v, --api-version VERSION        API version
 #    -n NAMESPACES,                   Exclude the specified list of namespaces
 #        --exclude-namespace
+#    -i NAMESPACES,                   Include the specified list of namespaces, an
+#        --include-namespace          empty list includes all namespaces
 #    -f, --filter FILTER              Selector filter for pods to be checked
 #    -p, --pods PODS                  List of pods to check
 #    -r, --restart COUNT              Threshold for number of restarts allowed
@@ -72,6 +74,13 @@ class PodsRestarting < Sensu::Plugins::Kubernetes::CLI
          proc: proc { |a| a.split(',') },
          default: ''
 
+  option :include_namespace,
+         description: 'Include the specified list of namespaces',
+         short: '-i NAMESPACES',
+         long: '--include-namespace',
+         proc: proc { |a| a.split(',') },
+         default: ''
+
   def run
     pods_list = []
     restarted_pods = []
@@ -88,7 +97,7 @@ class PodsRestarting < Sensu::Plugins::Kubernetes::CLI
     end
     pods.each do |pod|
       next if pod.nil?
-      next if config[:exclude_namespace].include?(pod.metadata.namespace)
+      next if should_exclude_namespace(pod.metadata.namespace)
       next unless pods_list.include?(pod.metadata.name) || pods_list.include?('all')
       # Check restarts
       next if pod.status.containerStatuses.nil?
@@ -112,5 +121,10 @@ class PodsRestarting < Sensu::Plugins::Kubernetes::CLI
     return list.split(',') if list && list.include?(',')
     return [list] if list
     ['']
+  end
+
+  def should_exclude_namespace(namespace)
+    return !config[:include_namespace].include?(namespace) unless config[:include_namespace].empty?
+    config[:exclude_namespace].include?(namespace)
   end
 end
