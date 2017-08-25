@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachangelog.com/)
 
 ## [Unreleased]
+### Changed
+ - Add option to explicitly include specific namespaces (@simulalex)
 
 ## [1.1.0] - 2017-08-11
 ### Added
