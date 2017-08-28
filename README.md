@@ -14,6 +14,7 @@ This provides functionality to check node and pod status as well as api and serv
 - bin/check-kube-apiserver-available.rb
 - bin/check-kube-pods-pending.rb
 - bin/check-kube-service-available.rb
+- bin/check-kube-service-endpoints.rb
 - bin/check-kube-pods-runtime.rb
 - bin/check-kube-pods-running.rb
 - bin/check-kube-pods-restarting.rb
@@ -93,6 +94,27 @@ Usage: check-kube-service-available.rb (options)
     -p, --pending SECONDS            Time (in seconds) a pod may be pending for and be valid
     -l, --list SERVICES              List of services to check (required)
         --kube-config KUBECONFIG     Path to a kube config file
+```
+
+**check-kube-service-endpoints.rb**
+```
+Usage: bin/check-kube-service-endpoints.rb (options)
+        --ca-file CA-FILE            CA file to verify API server cert
+        --cert CERT-FILE             Client cert to present
+        --key KEY-FILE               Client key for the client cert
+        --in-cluster                 Use service account authentication
+    -p, --password PASSWORD          If user is passed, also pass a password
+    -s, --api-server URL             URL to API server
+        --token TOKEN                Bearer token for authorization
+        --token-file TOKEN-FILE      File containing bearer token for authorization
+    -u, --user USER                  User with access to API
+        --api-version VERSION        API version
+        --exclude-namespaces         Exclude the specified list of namespaces
+        --exclude-services           comma separated list of services to exclude
+    -n, --namespaces NAMESPACES      comma separated list of namespaces to check (default all)
+    -l, --services SERVICES          comma separated list of services to check (default all)
+    -t, --types TYPES                comma separated list of service types to check (default: ClusterIP,LoadBalancer)
+    -v, --verbose                    verbose output
 ```
 
 **check-kube-pods-runtime.rb**
