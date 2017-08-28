@@ -6,6 +6,8 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 ## [Unreleased]
 ### Changed
  - Add option to explicitly include specific namespaces (@simulalex)
+### Removed
+ - Drops support for Ruby-2.0, now requires Ruby >= 2.1.0 (@simulalex)
 
 ## [1.1.0] - 2017-08-11
 ### Added
