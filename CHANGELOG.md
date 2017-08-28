@@ -4,8 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachangelog.com/)
 
 ## [Unreleased]
-### Changed
+
+## [2.0.0] - 2017-08-28
+### Added
  - Add option to explicitly include specific namespaces (@simulalex)
+ 
 ### Breaking Change
  - Drops support for Ruby-2.0, now requires Ruby >= 2.1.0 (@simulalex)
 
@@ -58,7 +61,8 @@ pending pods, the restart count portion has been split into it's own check, `che
 ### Added
 - initial release
 
-[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/1.1.0...HEAD
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/2.0.0...HEAD
+[2.0.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/1.1.0...2.0.0
 [1.1.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/1.0.0...1.1.0
 [1.0.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/0.1.2...1.0.0
 [0.1.2]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/0.1.1...0.1.2
