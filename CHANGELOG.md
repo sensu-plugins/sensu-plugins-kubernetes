@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachangelog.com/)
 
 ## [Unreleased]
+### Breaking Change
+ - check-kube-nodes-ready.rb no longer triggers an alert if an unschedulable node becomes NotReady (@tg90nor)
 
 ## [2.0.0] - 2017-08-28
 ### Added
