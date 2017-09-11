@@ -45,7 +45,7 @@ class AllNodesAreReady < Sensu::Plugins::Kubernetes::CLI
       if item.nil?
         warning "#{node.name} does not have a status"
       elsif item.status != 'True'
-        failed_nodes << node.metadata.name
+        failed_nodes << node.metadata.name unless node.spec.unschedulable
       end
     end
 
