@@ -5,6 +5,10 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 
 ## [Unreleased]
 
+## [3.0.1] - 2018-03-30
+### Fixed
+ - check-kube-pods-running.rb no longer throws an exception when there are no 3 conditions in the status information. Issue #39
+
 ## [3.0.0] - 2017-09-12
 ### Breaking Change
  - check-kube-nodes-ready.rb no longer triggers an alert if an unschedulable node becomes NotReady (@tg90nor)
