@@ -91,9 +91,14 @@ class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
       next if should_exclude_namespace(pod.metadata.namespace)
       next unless pods_list.include?(pod.metadata.name) || pods_list.include?('all')
       next unless pod.status.phase != 'Succeeded' && !pod.status.conditions.nil?
-      if pod.status.conditions[1].status == 'False' # This is the Ready state
-        failed_pods << pod.metadata.name
+      failed = true
+      pod.status.conditions.each do |c|
+        if c.status == 'Ready'
+          failed = false if c.status == 'True'
+          break
+        end
       end
+      failed_pods << pod.metadata.name if failed
     end
 
     if failed_pods.empty?
