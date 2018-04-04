@@ -91,14 +91,7 @@ class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
       next if should_exclude_namespace(pod.metadata.namespace)
       next unless pods_list.include?(pod.metadata.name) || pods_list.include?('all')
       next unless pod.status.phase != 'Succeeded' && !pod.status.conditions.nil?
-      failed = true
-      pod.status.conditions.each do |c|
-        if c.status == 'Ready'
-          failed = false if c.status == 'True'
-          break
-        end
-      end
-      failed_pods << pod.metadata.name if failed
+      failed_pods << pod.metadata.name unless is_it_ready? pod
     end
 
     if failed_pods.empty?
@@ -119,5 +112,16 @@ class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
   def should_exclude_namespace(namespace)
     return !config[:include_namespace].include?(namespace) unless config[:include_namespace].empty?
     config[:exclude_namespace].include?(namespace)
+  end
+
+  def is_it_ready?(pod)
+    failed = true
+    pod.status.conditions.each do |c|
+      if c.type == 'Ready'
+        failed = false if c.status == 'True'
+        break
+      end
+    end
+    not failed
   end
 end

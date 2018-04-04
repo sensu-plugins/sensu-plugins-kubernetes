@@ -76,8 +76,9 @@ module Sensu
         # Initializes the Sensu check by creating a Kubernetes client
         # from the given options and will report a critical error if
         # those arguments are incorrect.
-        def initialize
+        def initialize(argv = ARGV)
           super()
+          self.argv = parse_options(argv)
           begin
             @client = kubeclient(
               server: config[:api_server],
