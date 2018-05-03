@@ -1,9 +1,12 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachangelog.com/)
+This CHANGELOG follows the format listed [here ](https://github.com/sensu-plugins/community/blob/master/HOW_WE_CHANGELOG.md)
 
 ## [Unreleased]
+
+### Fixed
+- check-kube-pods-running.rb no longer throws an exception when there are no 3 conditions in the status information. Issue #39 (@AgarFu)
 
 ## [3.0.0] - 2017-09-12
 ### Breaking Change
@@ -65,7 +68,8 @@ pending pods, the restart count portion has been split into it's own check, `che
 ### Added
 - initial release
 
-[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.0.0...HEAD
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.0.1...HEAD
+[3.0.1]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.0.0...3.0.0.1
 [3.0.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/2.0.0...3.0.0
 [2.0.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/1.1.0...2.0.0
 [1.1.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/1.0.0...1.1.0
