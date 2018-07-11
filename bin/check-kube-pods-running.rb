@@ -57,7 +57,6 @@ class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
          description: 'Label selector for pods to be checked (example -- key1=value1,key2!=value2)',
          short: '-f FILTER',
          long: '--filter'
-         default: 'sg-ops-default-monitor!=no'
 
   option :exclude_namespace,
          description: 'Exclude the specified list of namespaces',

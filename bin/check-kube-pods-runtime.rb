@@ -52,8 +52,7 @@ class PodRuntime < Sensu::Plugins::Kubernetes::CLI
          description: 'Label selector for pods to be checked (example -- key1=value1,key2!=value2)',
          short: '-f FILTER',
          long: '--filter'
-         default: 'sg-ops-default-monitor!=no'
-
+         
   option :warn_timeout,
          description: 'Threshold for pods to be in the pending state',
          short: '-w TIMEOUT',
