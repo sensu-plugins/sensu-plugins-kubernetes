@@ -63,10 +63,11 @@ class AllPodsAreReady < Sensu::Plugins::Kubernetes::CLI
          proc: proc(&:to_i),
          default: 300
 
-  option :pod_filter,
-         description: 'Selector filter for pods to be checked',
+  option :label_filter,
+         description: 'Label selector for pods to be checked (example -- key1=value1,key2!=value2)',
          short: '-f FILTER',
          long: '--filter'
+         default: 'sg-ops-default-monitor!=no'
 
   option :exclude_namespace,
          description: 'Exclude the specified list of namespaces',
@@ -86,11 +87,11 @@ class AllPodsAreReady < Sensu::Plugins::Kubernetes::CLI
     pods_list = []
     failed_pods = []
     pods = []
-    if config[:pod_filter].nil?
+    if config[:label_filter].nil?
       pods_list = parse_list(config[:pod_list])
       pods = client.get_pods
     else
-      pods = client.get_pods(label_selector: config[:pod_filter].to_s)
+      pods = client.get_pods(label_selector: config[:label_filter].to_s)
       if pods.empty?
         unknown 'The filter specified resulted in 0 pods'
       end
