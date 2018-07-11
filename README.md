@@ -71,7 +71,7 @@ Usage: check-kube-pods-pending.rb (options)
     -i NAMESPACES,                   Include the specified list of namespaces, an 
         --include-namespace          empty list includes all namespaces
     -t, --timeout TIMEOUT            Threshold for pods to be in the pending state
-    -f, --filter FILTER              Selector filter for pods to be checked
+    -f, --filter FILTER              Label selector for pods to be checked (example -- key1=value1,key2!=value2)
     -p, --pods PODS                  List of pods to check
     -r, --restart COUNT              Threshold for number of restarts allowed
         --kube-config KUBECONFIG     Path to a kube config file
@@ -109,7 +109,7 @@ Usage: check-kube-pods-runtime.rb (options)
     -u, --user USER                  User with access to API
     -v, --api-version VERSION        API version
     -c, --critical COUNT             Threshold for Pods to be critical
-    -f, --filter FILTER              Selector filter for pods to be checked
+    -f, --filter FILTER              Label selector for pods to be checked (example -- key1=value1,key2!=value2)
     -p, --pods PODS                  List of pods to check
     -w, --warn TIMEOUT               Threshold for pods to be in the pending state
         --kube-config KUBECONFIG     Path to a kube config file
@@ -132,7 +132,7 @@ Usage: ./check-kube-pods-running.rb (options)
         --exclude-namespace
     -i NAMESPACES,                   Include the specified list of namespaces, an 
         --include-namespace          empty list includes all namespaces
-    -f, --filter FILTER              Selector filter for pods to be checked
+    -f, --filter FILTER              Label selector for pods to be checked (example -- key1=value1,key2!=value2)
     -p, --pods PODS                  List of pods to check
         --kube-config KUBECONFIG     Path to a kube config file
 ```
@@ -155,7 +155,7 @@ Usage: ./check-kube-pods-restarting.rb (options)
         --exclude-namespace
     -i NAMESPACES,                   Include the specified list of namespaces, an 
         --include-namespace          empty list includes all namespaces
-    -f, --filter FILTER              Selector filter for pods to be checked
+    -f, --filter FILTER              Label selector for pods to be checked (example -- key1=value1,key2!=value2)
     -p, --pods PODS                  List of pods to check
     -r, --restart COUNT              Threshold for number of restarts allowed
         --kube-config KUBECONFIG     Path to a kube config file
