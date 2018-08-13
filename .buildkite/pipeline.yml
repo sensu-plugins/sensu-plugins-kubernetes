@@ -1,14 +1,14 @@
 steps:
   - label: Lint
     command:
-      - bundle install
+      - bundle install --path vendor/bundle
       - bundle exec rubocop
     agents:
       queue: 'chef'
 
   - label: Rspec
     command:
-      - bundle install
+      - bundle install --path vendor/bundle
       - bundle exec rspec
     agents:
       queue: 'chef'
@@ -18,7 +18,7 @@ steps:
       REPO_SERVER: gems.sendgrid.net
     branches: 'master'
     command:
-      - bundle install
+      - bundle install --path vendor/bundle
       - bundle exec rake build
       - mkdir -p ci-repo
       - cp pkg/* ci-repo/
