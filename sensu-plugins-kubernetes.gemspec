@@ -4,13 +4,14 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'date'
 require_relative 'lib/sensu-plugins-kubernetes'
 
+# rubocop:disable Metrics/BlockLength
 Gem::Specification.new do |s|
   s.authors                = ['Sensu-Plugins and contributors']
   s.date                   = Date.today.to_s
   s.description            = 'Provides monitoring for Kubernetes via Sensu'
   s.email                  = '<sensu-users@googlegroups.com>'
   s.executables            = Dir.glob('bin/**/*.rb').map { |file| File.basename(file) }
-  s.files                  = Dir.glob('{bin,lib}/**/*') + %w(LICENSE README.md CHANGELOG.md)
+  s.files                  = Dir.glob('{bin,lib}/**/*') + %w(LICENSE README.md CHANGELOG.md Gemfile sensu-plugins-kubernetes.gemspec)
   s.homepage               = 'https://github.com/sensu-plugins/sensu-plugins-kubernetes'
   s.license                = 'MIT'
   s.metadata               = { 'maintainer'         => 'sensu-plugin',
@@ -41,3 +42,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec',                     '~> 3.4'
   s.add_development_dependency 'yard',                      '~> 0.8'
 end
+# rubocop:enable Metrics/BlockLength

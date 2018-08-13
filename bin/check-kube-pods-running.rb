@@ -26,6 +26,7 @@
 #         --token-file TOKEN-FILE      File containing bearer token for authorization
 #     -u, --user USER                  User with access to API
 #     -v, --api-version VERSION        API version
+#         --in-namespace               If running in K8S, operate in running namespace
 #     -n NAMESPACES,                   Exclude the specified list of namespaces
 #         --exclude-namespace
 #     -i NAMESPACES,                   Include the specified list of namespaces, an
@@ -43,9 +44,10 @@
 #
 
 require 'sensu-plugins-kubernetes/cli'
+require 'sensu-plugins-kubernetes/cli/namespaced'
 
 class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
-  @options = Sensu::Plugins::Kubernetes::CLI.options.dup
+  include Sensu::Plugins::Kubernetes::NamespacedCLI
 
   option :pod_list,
          description: 'List of pods to check',
@@ -78,9 +80,9 @@ class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
     pods = []
     if config[:pod_filter].nil?
       pods_list = parse_list(config[:pod_list])
-      pods = client.get_pods
+      pods = client.get_pods(namespace: namespace)
     else
-      pods = client.get_pods(label_selector: config[:pod_filter].to_s)
+      pods = client.get_pods(namespace: namespace, label_selector: config[:pod_filter].to_s)
       if pods.empty?
         unknown 'The filter specified resulted in 0 pods'
       end

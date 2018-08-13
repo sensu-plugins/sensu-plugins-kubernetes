@@ -66,6 +66,7 @@ Usage: check-kube-pods-pending.rb (options)
         --token-file TOKEN-FILE      File containing bearer token for authorization
     -u, --user USER                  User with access to API
     -v, --api-version VERSION        API version
+        --in-namespace               If running in K8S, operate in running namespace
     -n NAMESPACES,                   Exclude the specified list of namespaces
         --exclude-namespace
     -i NAMESPACES,                   Include the specified list of namespaces, an 
@@ -90,6 +91,7 @@ Usage: check-kube-service-available.rb (options)
         --token-file TOKEN-FILE      File containing bearer token for authorization
     -u, --user USER                  User with access to API
     -v, --api-version VERSION        API version
+        --in-namespace               If running in K8S, operate in running namespace
     -p, --pending SECONDS            Time (in seconds) a pod may be pending for and be valid
     -l, --list SERVICES              List of services to check (required)
         --kube-config KUBECONFIG     Path to a kube config file
@@ -108,6 +110,7 @@ Usage: check-kube-pods-runtime.rb (options)
         --token-file TOKEN-FILE      File containing bearer token for authorization
     -u, --user USER                  User with access to API
     -v, --api-version VERSION        API version
+        --in-namespace               If running in K8S, operate in running namespace
     -c, --critical COUNT             Threshold for Pods to be critical
     -f, --filter FILTER              Selector filter for pods to be checked
     -p, --pods PODS                  List of pods to check
@@ -128,6 +131,7 @@ Usage: ./check-kube-pods-running.rb (options)
         --token-file TOKEN-FILE      File containing bearer token for authorization
     -u, --user USER                  User with access to API
     -v, --api-version VERSION        API version
+        --in-namespace               If running in K8S, operate in running namespace
     -n NAMESPACES,                   Exclude the specified list of namespaces
         --exclude-namespace
     -i NAMESPACES,                   Include the specified list of namespaces, an 
@@ -151,6 +155,7 @@ Usage: ./check-kube-pods-restarting.rb (options)
         --token-file TOKEN-FILE      File containing bearer token for authorization
     -u, --user USER                  User with access to API
     -v, --api-version VERSION        API version
+        --in-namespace               If running in K8S, operate in running namespace
     -n NAMESPACES,                   Exclude the specified list of namespaces
         --exclude-namespace
     -i NAMESPACES,                   Include the specified list of namespaces, an 
@@ -194,12 +199,13 @@ Usage: metrics-pods.rb (options)
         --key KEY-FILE               Client key for the client cert
         --in-cluster                 Use service account authentication
         --password PASSWORD          If user is passed, also pass a password
-        -s, --api-server URL             URL to API server
-        -t, --token TOKEN                Bearer token for authorization
+    -s, --api-server URL             URL to API server
+    -t, --token TOKEN                Bearer token for authorization
         --token-file TOKEN-FILE      File containing bearer token for authorization
-        -u, --user USER                  User with access to API
-        -v, --api-version VERSION        API version
-            --kube-config KUBECONFIG     Path to a kube config file
+    -u, --user USER                  User with access to API
+    -v, --api-version VERSION        API version
+        --kube-config KUBECONFIG     Path to a kube config file
+        --in-namespace               If running in K8S, operate in running namespace
 ```
 
 `api_server` and `api_version` can still be used for backwards compatibility,
