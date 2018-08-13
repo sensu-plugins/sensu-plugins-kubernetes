@@ -62,7 +62,6 @@ class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
     services = parse_list(config[:service_list])
     failed_services = []
     s = client.get_services(namespace: namespace)
-    # rubocop:disable Metrics/BlockLength
     s.each do |a|
       next unless services.include?(a.metadata.name)
       # Build the selector key so we can fetch the corresponding pod
@@ -102,7 +101,6 @@ class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
         failed_services << "#{p.metadata.namespace}.#{p.metadata.name}" if pod_available == false
       end
     end
-    # rubocop:enable Metrics/BlockLength
 
     if failed_services.empty? && services.empty?
       ok 'All services are reporting as up'
