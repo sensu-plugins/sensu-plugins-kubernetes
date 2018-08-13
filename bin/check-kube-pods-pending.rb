@@ -26,6 +26,7 @@
 #     --password PASSWORD          If user is passed, also pass a password
 #     --token TOKEN                Bearer token for authorization
 #     --token-file TOKEN-FILE      File containing bearer token for authorization
+#     --in-namespace               If running in K8S, operate in running namespace
 # -n NAMESPACES,                   Exclude the specified list of namespaces
 #     --exclude-namespace
 # -i NAMESPACES,                   Include the specified list of namespaces, an
@@ -46,9 +47,10 @@
 #
 
 require 'sensu-plugins-kubernetes/cli'
+require 'sensu-plugins-kubernetes/cli/namespaced'
 
 class AllPodsAreReady < Sensu::Plugins::Kubernetes::CLI
-  @options = Sensu::Plugins::Kubernetes::CLI.options.dup
+  include Sensu::Plugins::Kubernetes::NamespacedCLI
 
   option :pod_list,
          description: 'List of pods to check',
@@ -88,9 +90,9 @@ class AllPodsAreReady < Sensu::Plugins::Kubernetes::CLI
     pods = []
     if config[:label_filter].nil?
       pods_list = parse_list(config[:pod_list])
-      pods = client.get_pods
+      pods = client.get_pods(namespace: namespace)
     else
-      pods = client.get_pods(label_selector: config[:label_filter].to_s)
+      pods = client.get_pods(namespace: namespace, label_selector: config[:label_filter].to_s)
       if pods.empty?
         unknown 'The filter specified resulted in 0 pods'
       end
