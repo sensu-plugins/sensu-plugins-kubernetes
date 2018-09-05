@@ -24,17 +24,19 @@
 #   Released under the same terms as Sensu (the MIT license); see LICENSE
 #   for details.
 require 'sensu-plugins-kubernetes/cli'
+require 'sensu-plugins-kubernetes/cli/namespaced'
 require 'sensu-plugin/metric/cli'
 require 'uri'
 
 class PodsMetrics < Sensu::Plugin::Metric::CLI::Graphite
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
+  include Sensu::Plugins::Kubernetes::NamespacedCLI
 
   def run
     config[:scheme] = "#{URI(config[:api_server]).host}.pods"
     count = {}
     client = Sensu::Plugins::Kubernetes::CLI.new.client
-    services = client.get_services
+    services = client.get_services(namespace: namespace)
     services.each do |s|
       selector_key = []
       count[s.metadata.name] = 0
@@ -44,7 +46,7 @@ class PodsMetrics < Sensu::Plugin::Metric::CLI::Graphite
       end
       pod = nil
       begin
-        pod = client.get_pods(label_selector: selector_key.join(',').to_s)
+        pod = client.get_pods(namespace: namespace, label_selector: selector_key.join(',').to_s)
       rescue KubeException => e
         critical 'API error: ' << e.message
       end

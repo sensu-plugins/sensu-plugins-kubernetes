@@ -1,0 +1,16 @@
+steps:
+  - label: Lint and Test
+    command:
+    - bundle install
+    - bundle exec rubocop
+    - bundle exec rspec
+    - bundle exec rake build
+    - buildkite-agent artifact upload pkg/sendgrid-sensu-plugins-kubernetes*.gem
+    plugins:
+      docker#v1.4.0:
+        image: "ruby:2.4"
+
+  - label: Publish
+    plugins:
+      sendgrid-ops/artifactory#${ARTIFACTORY_PLUGIN_VERSION}:
+        files: pkg/sendgrid-sensu-plugins-kubernetes*.gem

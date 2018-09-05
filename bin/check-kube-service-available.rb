@@ -26,6 +26,7 @@
 #     --password PASSWORD          If user is passed, also pass a password
 #     --token TOKEN                Bearer token for authorization
 #     --token-file TOKEN-FILE      File containing bearer token for authorization
+#     --in-namespace               If running in K8S, operate in running namespace
 # -l, --list SERVICES              List of services to check (required)
 # -p, --pending SECONDS            Time (in seconds) a pod may be pending for and be valid
 #
@@ -38,10 +39,11 @@
 #
 
 require 'sensu-plugins-kubernetes/cli'
+require 'sensu-plugins-kubernetes/cli/namespaced'
 require 'time'
 
 class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
-  @options = Sensu::Plugins::Kubernetes::CLI.options.dup
+  include Sensu::Plugins::Kubernetes::NamespacedCLI
 
   option :service_list,
          description: 'List of services to check',
@@ -59,7 +61,7 @@ class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
   def run
     services = parse_list(config[:service_list])
     failed_services = []
-    s = client.get_services
+    s = client.get_services(namespace: namespace)
     s.each do |a|
       next unless services.include?(a.metadata.name)
       # Build the selector key so we can fetch the corresponding pod
@@ -71,7 +73,7 @@ class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
       # Get the pod
       pod = nil
       begin
-        pod = client.get_pods(label_selector: selector_key.join(',').to_s)
+        pod = client.get_pods(namespace: namespace, label_selector: selector_key.join(',').to_s)
       rescue
         failed_services << a.metadata.name.to_s
       end
