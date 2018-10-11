@@ -77,5 +77,4 @@ class AllNodesAreReady < Sensu::Plugins::Kubernetes::CLI
     return !config[:include_node].include?(node_name) unless config[:include_node].empty?
     config[:exclude_node].include?(node_name)
   end
-
 end
