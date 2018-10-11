@@ -32,7 +32,7 @@
 #         --include-namespace          empty list includes all namespaces
 #         --exclude-node               Exclude the specified list of nodes
 #         --include-node               Include the specified list of nodes, an
-#                                      empty list includes all namespaces
+#                                      empty list includes all nodes
 #     -f, --filter FILTER              Selector filter for pods to be checked
 #     -p, --pods PODS                  List of pods to check
 # NOTES:

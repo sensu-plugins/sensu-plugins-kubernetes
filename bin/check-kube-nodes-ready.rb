@@ -26,9 +26,9 @@
 # -p, --password PASSWORD          If user is passed, also pass a password
 # -t, --token TOKEN                Bearer token for authorization
 #     --token-file TOKEN-FILE      File containing bearer token for authorization
-#         --exclude-node               Exclude the specified list of nodes
-#         --include-node               Include the specified list of nodes, an
-#                                      empty list includes all namespaces
+#     --exclude-node               Exclude the specified list of nodes
+#     --include-node               Include the specified list of nodes, an
+#                                  empty list includes all nodes
 #
 # LICENSE:
 #   Kel Cecil <kelcecil@praisechaos.com>
