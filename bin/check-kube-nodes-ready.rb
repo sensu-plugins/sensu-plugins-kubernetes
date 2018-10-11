@@ -26,6 +26,9 @@
 # -p, --password PASSWORD          If user is passed, also pass a password
 # -t, --token TOKEN                Bearer token for authorization
 #     --token-file TOKEN-FILE      File containing bearer token for authorization
+#         --exclude-node               Exclude the specified list of nodes
+#         --include-node               Include the specified list of nodes, an
+#                                      empty list includes all namespaces
 #
 # LICENSE:
 #   Kel Cecil <kelcecil@praisechaos.com>
@@ -38,6 +41,18 @@ require 'sensu-plugins-kubernetes/cli'
 class AllNodesAreReady < Sensu::Plugins::Kubernetes::CLI
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
 
+  option :exclude_node,
+         description: 'Exclude the specified list of nodes',
+         long: '--exclude-node NODES',
+         proc: proc { |a| a.split(',') },
+         default: ''
+
+  option :include_node,
+         description: 'Include the specified list of nodes',
+         long: '--include-node NODES',
+         proc: proc { |a| a.split(',') },
+         default: ''
+
   def run
     failed_nodes = []
     client.get_nodes.each do |node|
@@ -45,6 +60,7 @@ class AllNodesAreReady < Sensu::Plugins::Kubernetes::CLI
       if item.nil?
         warning "#{node.name} does not have a status"
       elsif item.status != 'True'
+        next if should_exclude_node(node.metadata.name)
         failed_nodes << node.metadata.name unless node.spec.unschedulable
       end
     end
@@ -56,4 +72,10 @@ class AllNodesAreReady < Sensu::Plugins::Kubernetes::CLI
   rescue KubeException => e
     critical 'API error: ' << e.message
   end
+
+  def should_exclude_node(node_name)
+    return !config[:include_node].include?(node_name) unless config[:include_node].empty?
+    config[:exclude_node].include?(node_name)
+  end
+
 end

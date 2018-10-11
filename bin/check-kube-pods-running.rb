@@ -30,6 +30,9 @@
 #         --exclude-namespace
 #     -i NAMESPACES,                   Include the specified list of namespaces, an
 #         --include-namespace          empty list includes all namespaces
+#         --exclude-node               Exclude the specified list of nodes
+#         --include-node               Include the specified list of nodes, an
+#                                      empty list includes all namespaces
 #     -f, --filter FILTER              Selector filter for pods to be checked
 #     -p, --pods PODS                  List of pods to check
 # NOTES:
@@ -72,6 +75,18 @@ class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
          proc: proc { |a| a.split(',') },
          default: ''
 
+  option :exclude_node,
+         description: 'Exclude the specified list of nodes',
+         long: '--exclude-node NODES',
+         proc: proc { |a| a.split(',') },
+         default: ''
+
+  option :include_node,
+         description: 'Include the specified list of nodes',
+         long: '--include-node NODES',
+         proc: proc { |a| a.split(',') },
+         default: ''
+
   def run
     pods_list = []
     failed_pods = []
@@ -89,6 +104,7 @@ class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
     pods.each do |pod|
       next if pod.nil?
       next if should_exclude_namespace(pod.metadata.namespace)
+      next if should_exclude_node(pod.spec.nodeName)
       next unless pods_list.include?(pod.metadata.name) || pods_list.include?('all')
       next unless pod.status.phase != 'Succeeded' && !pod.status.conditions.nil?
       failed_pods << pod.metadata.name unless ready? pod
@@ -112,6 +128,11 @@ class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
   def should_exclude_namespace(namespace)
     return !config[:include_namespace].include?(namespace) unless config[:include_namespace].empty?
     config[:exclude_namespace].include?(namespace)
+  end
+
+  def should_exclude_node(node_name)
+    return !config[:include_node].include?(node_name) unless config[:include_node].empty?
+    config[:exclude_node].include?(node_name)
   end
 
   def ready?(pod)
