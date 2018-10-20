@@ -26,8 +26,8 @@
 # -p, --password PASSWORD          If user is passed, also pass a password
 # -t, --token TOKEN                Bearer token for authorization
 #     --token-file TOKEN-FILE      File containing bearer token for authorization
-#     --exclude-node               Exclude the specified list of nodes
-#     --include-node               Include the specified list of nodes, an
+#     --exclude-nodes              Exclude the specified nodes (comma separated list)
+#     --include-nodes              Include the specified nodes (comma separated list), an
 #                                  empty list includes all nodes
 #
 # LICENSE:
@@ -41,15 +41,15 @@ require 'sensu-plugins-kubernetes/cli'
 class AllNodesAreReady < Sensu::Plugins::Kubernetes::CLI
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
 
-  option :exclude_node,
-         description: 'Exclude the specified list of nodes',
-         long: '--exclude-node NODES',
+  option :exclude_nodes,
+         description: 'Exclude the specified nodes (comma separated list)',
+         long: '--exclude-nodes NODES',
          proc: proc { |a| a.split(',') },
          default: ''
 
-  option :include_node,
-         description: 'Include the specified list of nodes',
-         long: '--include-node NODES',
+  option :include_nodes,
+         description: 'Include the specified nodes (comma separated list)',
+         long: '--include-nodes NODES',
          proc: proc { |a| a.split(',') },
          default: ''
 
@@ -74,7 +74,7 @@ class AllNodesAreReady < Sensu::Plugins::Kubernetes::CLI
   end
 
   def should_exclude_node(node_name)
-    return !config[:include_node].include?(node_name) unless config[:include_node].empty?
-    config[:exclude_node].include?(node_name)
+    return !config[:include_nodes].include?(node_name) unless config[:include_nodes].empty?
+    config[:exclude_nodes].include?(node_name)
   end
 end
