@@ -75,5 +75,4 @@ class AllNodesAreReady < Sensu::Plugins::Kubernetes::CLI
   rescue KubeException => e
     critical 'API error: ' << e.message
   end
-
 end

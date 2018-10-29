@@ -4,7 +4,6 @@ module Sensu
     module Kubernetes
       # A mixin module that provides filtering functions.
       module Exclude
-
         # Filters the list of pods or nodes based on include/exclude options.
         #
         # @option options [String] :exclude_nodes
@@ -13,21 +12,20 @@ module Sensu
         # @option options [String] :include-nodes
         #   Include the specified nodes (comma separated list), an
         #   empty list includes all nodes
-
         def node_included?(node_name)
-          if config[:include_nodes].empty? then
-            return true
+          if config[:include_nodes].empty?
+            true
           else
-            return config[:include_nodes].include?(node_name)
+            config[:include_nodes].include?(node_name)
           end
         end
 
         def node_excluded?(node_name)
-          return config[:exclude_nodes].include?(node_name)
+          config[:exclude_nodes].include?(node_name)
         end
 
         def should_exclude_node(node_name)
-          return node_excluded?(node_name) || !node_included?(node_name)
+          node_excluded?(node_name) || !node_included?(node_name)
         end
       end
     end
