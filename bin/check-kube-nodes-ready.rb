@@ -27,6 +27,7 @@
 # -t, --token TOKEN                Bearer token for authorization
 #     --token-file TOKEN-FILE      File containing bearer token for authorization
 #     --exclude-nodes              Exclude the specified nodes (comma separated list)
+#                                  Exclude wins when a node is in both include and exclude lists
 #     --include-nodes              Include the specified nodes (comma separated list), an
 #                                  empty list includes all nodes
 #
@@ -37,9 +38,11 @@
 #
 
 require 'sensu-plugins-kubernetes/cli'
+require 'sensu-plugins-kubernetes/exclude'
 
 class AllNodesAreReady < Sensu::Plugins::Kubernetes::CLI
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
+  include Sensu::Plugins::Kubernetes::Exclude
 
   option :exclude_nodes,
          description: 'Exclude the specified nodes (comma separated list)',
@@ -73,8 +76,4 @@ class AllNodesAreReady < Sensu::Plugins::Kubernetes::CLI
     critical 'API error: ' << e.message
   end
 
-  def should_exclude_node(node_name)
-    return !config[:include_nodes].include?(node_name) unless config[:include_nodes].empty?
-    config[:exclude_nodes].include?(node_name)
-  end
 end

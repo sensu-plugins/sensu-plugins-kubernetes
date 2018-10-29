@@ -31,6 +31,7 @@
 #     -i NAMESPACES,                   Include the specified list of namespaces, an
 #         --include-namespace          empty list includes all namespaces
 #         --exclude-nodes              Exclude the specified nodes (comma separated list)
+#                                      Exclude wins when a node is in both include and exclude lists
 #         --include-nodes              Include the specified nodes (comma separated list), an
 #                                      empty list includes all nodes
 #     -f, --filter FILTER              Selector filter for pods to be checked
@@ -46,9 +47,11 @@
 #
 
 require 'sensu-plugins-kubernetes/cli'
+require 'sensu-plugins-kubernetes/exclude'
 
 class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
+  include Sensu::Plugins::Kubernetes::Exclude
 
   option :pod_list,
          description: 'List of pods to check',
@@ -128,11 +131,6 @@ class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
   def should_exclude_namespace(namespace)
     return !config[:include_namespace].include?(namespace) unless config[:include_namespace].empty?
     config[:exclude_namespace].include?(namespace)
-  end
-
-  def should_exclude_node(node_name)
-    return !config[:include_nodes].include?(node_name) unless config[:include_nodes].empty?
-    config[:exclude_nodes].include?(node_name)
   end
 
   def ready?(pod)
