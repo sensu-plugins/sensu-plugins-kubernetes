@@ -26,6 +26,10 @@
 # -p, --password PASSWORD          If user is passed, also pass a password
 # -t, --token TOKEN                Bearer token for authorization
 #     --token-file TOKEN-FILE      File containing bearer token for authorization
+#     --exclude-nodes              Exclude the specified nodes (comma separated list)
+#                                  Exclude wins when a node is in both include and exclude lists
+#     --include-nodes              Include the specified nodes (comma separated list), an
+#                                  empty list includes all nodes
 #
 # LICENSE:
 #   Kel Cecil <kelcecil@praisechaos.com>
@@ -34,9 +38,23 @@
 #
 
 require 'sensu-plugins-kubernetes/cli'
+require 'sensu-plugins-kubernetes/exclude'
 
 class AllNodesAreReady < Sensu::Plugins::Kubernetes::CLI
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
+  include Sensu::Plugins::Kubernetes::Exclude
+
+  option :exclude_nodes,
+         description: 'Exclude the specified nodes (comma separated list)',
+         long: '--exclude-nodes NODES',
+         proc: proc { |a| a.split(',') },
+         default: ''
+
+  option :include_nodes,
+         description: 'Include the specified nodes (comma separated list)',
+         long: '--include-nodes NODES',
+         proc: proc { |a| a.split(',') },
+         default: ''
 
   def run
     failed_nodes = []
@@ -45,6 +63,7 @@ class AllNodesAreReady < Sensu::Plugins::Kubernetes::CLI
       if item.nil?
         warning "#{node.name} does not have a status"
       elsif item.status != 'True'
+        next if should_exclude_node(node.metadata.name)
         failed_nodes << node.metadata.name unless node.spec.unschedulable
       end
     end

@@ -36,6 +36,10 @@ Usage: check-kube-nodes-ready.rb (options)
     -u, --user USER                  User with access to API
     -v, --api-version VERSION        API version
         --kube-config KUBECONFIG     Path to a kube config file
+        --exclude-nodes              Exclude the specified nodes (comma separated list)
+                                     Exclude wins when a node is in both include and exclude lists
+        --include-nodes              Include the specified nodes (comma separated list), an
+                                     empty list includes all nodes
 ```
 
 **check-kube-apiserver-available.rb**
@@ -70,6 +74,10 @@ Usage: check-kube-pods-pending.rb (options)
         --exclude-namespace
     -i NAMESPACES,                   Include the specified list of namespaces, an 
         --include-namespace          empty list includes all namespaces
+        --exclude-nodes              Exclude the specified nodes (comma separated list)
+                                     Exclude wins when a node is in both include and exclude lists
+        --include-nodes              Include the specified nodes (comma separated list), an
+                                     empty list includes all nodes
     -t, --timeout TIMEOUT            Threshold for pods to be in the pending state
     -f, --filter FILTER              Selector filter for pods to be checked
     -p, --pods PODS                  List of pods to check
@@ -132,6 +140,10 @@ Usage: ./check-kube-pods-running.rb (options)
         --exclude-namespace
     -i NAMESPACES,                   Include the specified list of namespaces, an 
         --include-namespace          empty list includes all namespaces
+        --exclude-nodes              Exclude the specified nodes (comma separated list)
+                                     Exclude wins when a node is in both include and exclude lists
+        --include-nodes              Include the specified nodes (comma separated list), an
+                                     empty list includes all nodes
     -f, --filter FILTER              Selector filter for pods to be checked
     -p, --pods PODS                  List of pods to check
         --kube-config KUBECONFIG     Path to a kube config file
@@ -155,6 +167,10 @@ Usage: ./check-kube-pods-restarting.rb (options)
         --exclude-namespace
     -i NAMESPACES,                   Include the specified list of namespaces, an 
         --include-namespace          empty list includes all namespaces
+        --exclude-nodes              Exclude the specified nodes (comma separated list)
+                                     Exclude wins when a node is in both include and exclude lists
+        --include-nodes              Include the specified nodes (comma separated list), an
+                                     empty list includes all nodes
     -f, --filter FILTER              Selector filter for pods to be checked
     -p, --pods PODS                  List of pods to check
     -r, --restart COUNT              Threshold for number of restarts allowed

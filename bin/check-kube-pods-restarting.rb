@@ -30,6 +30,10 @@
 #        --exclude-namespace
 #    -i NAMESPACES,                   Include the specified list of namespaces, an
 #        --include-namespace          empty list includes all namespaces
+#        --exclude-nodes              Exclude the specified nodes (comma separated list)
+#                                     Exclude wins when a node is in both include and exclude lists
+#        --include-nodes              Include the specified nodes (comma separated list), an
+#                                     empty list includes all nodes
 #    -f, --filter FILTER              Selector filter for pods to be checked
 #    -p, --pods PODS                  List of pods to check
 #    -r, --restart COUNT              Threshold for number of restarts allowed
@@ -45,9 +49,11 @@
 #
 
 require 'sensu-plugins-kubernetes/cli'
+require 'sensu-plugins-kubernetes/exclude'
 
 class PodsRestarting < Sensu::Plugins::Kubernetes::CLI
   @options = Sensu::Plugins::Kubernetes::CLI.options.dup
+  include Sensu::Plugins::Kubernetes::Exclude
 
   option :pod_list,
          description: 'List of pods to check',
@@ -81,6 +87,18 @@ class PodsRestarting < Sensu::Plugins::Kubernetes::CLI
          proc: proc { |a| a.split(',') },
          default: ''
 
+  option :exclude_nodes,
+         description: 'Exclude the specified nodes (comma separated list)',
+         long: '--exclude-nodes NODES',
+         proc: proc { |a| a.split(',') },
+         default: ''
+
+  option :include_nodes,
+         description: 'Include the specified nodes (comma separated list)',
+         long: '--include-nodes NODES',
+         proc: proc { |a| a.split(',') },
+         default: ''
+
   def run
     pods_list = []
     restarted_pods = []
@@ -98,6 +116,7 @@ class PodsRestarting < Sensu::Plugins::Kubernetes::CLI
     pods.each do |pod|
       next if pod.nil?
       next if should_exclude_namespace(pod.metadata.namespace)
+      next if should_exclude_node(pod.spec.nodeName)
       next unless pods_list.include?(pod.metadata.name) || pods_list.include?('all')
       # Check restarts
       next if pod.status.containerStatuses.nil?
