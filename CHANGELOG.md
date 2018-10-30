@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed [here ](https://github.com/sensu-plugins/community/blob/master/HOW_WE_CHANGELOG.md)
 
 ## [Unreleased]
+
+## [3.1.0] - 2018-10-29
 ### Added
  - `check-kube-nodes-ready.rb`, `check-kube-pods-pending.rb`, `check-kube-pods-restarting.rb`, `check-kube-pods-running.rb`: added options `--included-nodes` and `--excluded-nodes` which support a comma separated list so you can filter nodes (@ttarczynski)
 
@@ -70,7 +72,8 @@ pending pods, the restart count portion has been split into it's own check, `che
 ### Added
 - initial release
 
-[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.0.1...HEAD
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.1.0...HEAD
+[3.1.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.0.1...3.1.0
 [3.0.1]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.0.0...3.0.0.1
 [3.0.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/2.0.0...3.0.0
 [2.0.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/1.1.0...2.0.0
