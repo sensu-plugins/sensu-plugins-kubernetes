@@ -25,7 +25,11 @@ module Sensu
         end
 
         def should_exclude_node(node_name)
-          node_excluded?(node_name) || !node_included?(node_name)
+          if node_name.nil?
+            false
+          else
+            node_excluded?(node_name) || !node_included?(node_name)
+          end
         end
       end
     end
