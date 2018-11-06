@@ -5,6 +5,10 @@ This CHANGELOG follows the format listed [here ](https://github.com/sensu-plugin
 
 ## [Unreleased]
 
+### Changed
+
+ - `check-kube-service-available.rb`: Skip a service if its selector is empty. Otherwise all PODs in the cluster are listed with client.get_pods() call (including those that we do not want to monitor) (@sys-ops)
+
 ## [3.1.1] - 2018-11-01
 ### Fixed
  - `check-kube-nodes-ready.rb`, `check-kube-pods-pending.rb`, `check-kube-pods-restarting.rb`, `check-kube-pods-running.rb`: fix exception when pod.spec.nodeName == nil (i.e. pod not assigned to a node) (@ttarczynski)
