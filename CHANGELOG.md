@@ -5,6 +5,11 @@ This CHANGELOG follows the format listed [here ](https://github.com/sensu-plugin
 
 ## [Unreleased]
 
+### Chaned
+ - `check-kube-pods-running.rb`: Skip a POD which is in the not ready state for shorter time than the specified time. Otherwise, the check alerts if we get lots of new PODs which are spawned every second and get up or get terminated longer than a minute. (@sys-ops)
+
+
+## [3.2.0] - 2018-11-21
 ### Changed
  - `check-kube-service-available.rb`: Skip a service if its selector is empty. Otherwise all PODs in the cluster are listed with client.get_pods() call (including those that we do not want to monitor) (@sys-ops)
 
