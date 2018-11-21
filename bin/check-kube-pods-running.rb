@@ -64,7 +64,7 @@ class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
          description: 'Threshold for pods to be in the non ready state',
          long: '--time TIME',
          proc: proc(&:to_i),
-         default: 300
+         default: 0
 
   option :pod_filter,
          description: 'Selector filter for pods to be checked',
@@ -118,9 +118,9 @@ class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
       next unless pods_list.include?(pod.metadata.name) || pods_list.include?('all')
       next unless pod.status.phase != 'Succeeded' && !pod.status.conditions.nil?
       pod_stamp = Time.parse(pod.status.startTime)
-      if (Time.now.utc - pod_stamp.utc).to_i > config[:not_ready_time]
-        failed_pods << pod.metadata.name unless ready? pod
-      end
+      runtime = (Time.now.utc - pod_stamp.utc).to_i
+      next if runtime < config[:not_ready_time]
+      failed_pods << pod.metadata.name unless ready? pod
     end
 
     if failed_pods.empty?
