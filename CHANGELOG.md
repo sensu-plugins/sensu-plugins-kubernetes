@@ -6,7 +6,6 @@ This CHANGELOG follows the format listed [here ](https://github.com/sensu-plugin
 ## [Unreleased]
 
 ### Changed
-
  - `check-kube-service-available.rb`: Skip a service if its selector is empty. Otherwise all PODs in the cluster are listed with client.get_pods() call (including those that we do not want to monitor) (@sys-ops)
 
 ## [3.1.1] - 2018-11-01
@@ -80,7 +79,8 @@ pending pods, the restart count portion has been split into it's own check, `che
 ### Added
 - initial release
 
-[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.1.1...HEAD
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.2.0...HEAD
+[3.2.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.1.1...3.2.0
 [3.1.1]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.1.0...3.1.1
 [3.1.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.0.1...3.1.0
 [3.0.1]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.0.0...3.0.0.1
