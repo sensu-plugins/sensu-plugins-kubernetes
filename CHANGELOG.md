@@ -4,11 +4,20 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed [here ](https://github.com/sensu-plugins/community/blob/master/HOW_WE_CHANGELOG.md)
 
 ## [Unreleased]
+### Security
+- updated rubocop dependency to `~> 0.51.0` per: https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-8418. (@majormoses)
+- updated yard dependency to `~> 0.9.11` per: https://nvd.nist.gov/vuln/detail/CVE-2017-17042 (@majormoses)
+
+### Breaking Changes
+- drop suppport for ruby versions `< 2.3` as they are EOL (@majormoses)
+- bumped dependency of sensu-plugin to 2.x you can read about it [here](https://github.com/sensu-plugins/sensu-plugin/blob/master/CHANGELOG.md#v145---2017-03-07) (@majormoses)
+
+### Changed
+- appeased the cops (@majormoses)
 
 ## [3.3.0] - 2018-11-26
 ### Changed
  - `check-kube-pods-running.rb`: Skip a POD which is in the not ready state for shorter time than the specified time. Otherwise, the check alerts if we get lots of new PODs which are spawned every second and get up or get terminated longer than a minute. (@sys-ops)
-
 
 ## [3.2.0] - 2018-11-21
 ### Changed
