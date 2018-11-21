@@ -60,7 +60,8 @@ class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
     services = parse_list(config[:service_list])
     failed_services = []
     s = client.get_services
-    s.each do |a|
+    # TODO: come back and clean me up
+    s.each do |a| # rubocop:disable Metrics/BlockLength
       next unless services.include?(a.metadata.name)
       # Build the selector key so we can fetch the corresponding pod
       selector_key = []
@@ -73,7 +74,7 @@ class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
       pod = nil
       begin
         pod = client.get_pods(label_selector: selector_key.join(',').to_s)
-      rescue
+      rescue StandardError
         failed_services << a.metadata.name.to_s
       end
       # Make sure our pod is running

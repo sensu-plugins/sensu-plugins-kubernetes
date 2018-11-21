@@ -57,7 +57,7 @@ module Sensu
 
               ssl_options = config.context.ssl_options
               auth_options = config.context.auth_options
-            rescue => e
+            rescue StandardError => e
               raise e, "Unable to read kubeconfig: #{e}", e.backtrace
             end
           else
@@ -75,14 +75,14 @@ module Sensu
             }
           end
 
-          if [:client_cert_file, :client_key_file].count { |k| options[k] } == 1
+          if %i[client_cert_file client_key_file].count { |k| options[k] } == 1
             raise ArgumentError, 'SSL requires both client cert and client key'
           end
 
           if options[:client_cert_file]
             begin
               ssl_options[:client_cert] = OpenSSL::X509::Certificate.new(File.read(options[:client_cert_file]))
-            rescue => e
+            rescue StandardError => e
               raise e, "Unable to read client certificate: #{e}", e.backtrace
             end
           end
@@ -90,7 +90,7 @@ module Sensu
           if options[:client_key_file]
             begin
               ssl_options[:client_key] = OpenSSL::PKey::RSA.new(File.read(options[:client_key_file]))
-            rescue => e
+            rescue StandardError => e
               raise e, "Unable to read client key: #{e}", e.backtrace
             end
           end
