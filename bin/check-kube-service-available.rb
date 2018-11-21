@@ -68,6 +68,7 @@ class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
       a.spec.selector.to_h.each do |k, v|
         selector_key << "#{k}=#{v}"
       end
+      next if selector_key.empty?
       # Get the pod
       pod = nil
       begin
