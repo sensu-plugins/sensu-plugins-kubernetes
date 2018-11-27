@@ -5,6 +5,7 @@ This CHANGELOG follows the format listed [here ](https://github.com/sensu-plugin
 
 ## [Unreleased]
 
+## [3.3.0] - 2018-11-26
 ### Changed
  - `check-kube-pods-running.rb`: Skip a POD which is in the not ready state for shorter time than the specified time. Otherwise, the check alerts if we get lots of new PODs which are spawned every second and get up or get terminated longer than a minute. (@sys-ops)
 
@@ -84,7 +85,8 @@ pending pods, the restart count portion has been split into it's own check, `che
 ### Added
 - initial release
 
-[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.2.0...HEAD
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.3.0...HEAD
+[3.3.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.2.0...3.3.0
 [3.2.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.1.1...3.2.0
 [3.1.1]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.1.0...3.1.1
 [3.1.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.0.1...3.1.0
