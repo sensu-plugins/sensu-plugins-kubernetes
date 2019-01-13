@@ -105,7 +105,7 @@ class CheckKubernetesCertificates < Sensu::Plugins::Kubernetes::CLI
 
   def validate_cert(cert)
     OpenSSL::X509::Certificate.new cert
-  rescue StandardError => e
+  rescue CertificateError => e
     wonky_certs << "Error Parsing: #{cert['metadata']['name']} #{e}"
   end
 
