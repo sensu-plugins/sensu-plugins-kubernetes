@@ -76,6 +76,7 @@ class CheckKubernetesCertificates < Sensu::Plugins::Kubernetes::CLI
   def run
     all_certs = []
     bad_certs = []
+    wonky_certs = []
     secrets = client.get_secrets(namespace: namespace)
     secrets.each do |secret|
       all_certs << secret if secret['metadata']['annotations'].to_s.include?('certmanager')
@@ -86,8 +87,6 @@ class CheckKubernetesCertificates < Sensu::Plugins::Kubernetes::CLI
       time_now_utc = Time.now.utc
       cert_expiration = loaded_cert.not_after # Kube returns these in UTC
 
-      # handle certs that don't validate
-
       if (cert_expiration - time_now_utc) < config[:expiration_window]
         bad_certs << cert['metadata']['name']
       end
@@ -95,6 +94,8 @@ class CheckKubernetesCertificates < Sensu::Plugins::Kubernetes::CLI
 
     if bad_certs.empty?
       ok 'All certificates are valid and are not expiring soon'
+    elsif wonky_certs.any?
+      warn "Error parsing cert(s): #{wonky_certs.join(' ')}"
     else
       critical "The following cert(s) are expiring in less than #{config[:expiration_window] / 86_400} days: #{bad_certs.join(' ')}"
     end
@@ -104,6 +105,8 @@ class CheckKubernetesCertificates < Sensu::Plugins::Kubernetes::CLI
 
   def validate_cert(cert)
     OpenSSL::X509::Certificate.new cert
+  rescue StandardError => e
+    wonky_certs << "Error Parsing: #{cert['metadata']['name']} #{e}"
   end
 
   def should_exclude_namespace(namespace)
