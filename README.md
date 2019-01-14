@@ -12,6 +12,7 @@ This provides functionality to check node and pod status as well as api and serv
 ## Files
 - bin/check-kube-apiserver-available.rb
 - bin/check-kube-certs.rb
+- bin/check-kube-external-dns-services.rb
 - bin/check-kube-nodes-ready.rb
 - bin/check-kube-pods-pending.rb
 - bin/check-kube-pods-restarting.rb
@@ -23,21 +24,7 @@ This provides functionality to check node and pod status as well as api and serv
 
 ## Usage
 
-**check-kube-nodes-ready.rb**
-```
-Usage: check-kube-nodes-ready.rb (options)
-        --ca-file CA-FILE            CA file to verify API server cert
-        --cert CERT-FILE             Client cert to present
-        --key KEY-FILE               Client key for the client cert
-        --in-cluster                 Use service account authentication
-    -p, --password PASSWORD          If user is passed, also pass a password
-    -s, --api-server URL             URL to API server
-    -t, --token TOKEN                Bearer token for authorization
-        --token-file TOKEN-FILE      File containing bearer token for authorization
-    -u, --user USER                  User with access to API
-    -v, --api-version VERSION        API version
-        --kube-config KUBECONFIG     Path to a kube config file
-```
+
 
 **check-kube-apiserver-available.rb**
 ```
@@ -51,118 +38,6 @@ Usage: check-kube-apiserver-available.rb (options)
     -t, --token TOKEN                Bearer token for authorization
         --token-file TOKEN-FILE      File containing bearer token for authorization
     -u, --user USER                  User with access to API
-        --kube-config KUBECONFIG     Path to a kube config file
-```
-
-**check-kube-pods-pending.rb**
-```
-Usage: check-kube-pods-pending.rb (options)
-        --ca-file CA-FILE            CA file to verify API server cert
-        --cert CERT-FILE             Client cert to present
-        --key KEY-FILE               Client key for the client cert
-        --in-cluster                 Use service account authentication
-        --password PASSWORD          If user is passed, also pass a password
-    -s, --api-server URL             URL to API server
-        --token TOKEN                Bearer token for authorization
-        --token-file TOKEN-FILE      File containing bearer token for authorization
-    -u, --user USER                  User with access to API
-    -v, --api-version VERSION        API version
-        --in-namespace               If running in K8S, operate in running namespace
-    -n NAMESPACES,                   Exclude the specified list of namespaces
-        --exclude-namespace
-    -i NAMESPACES,                   Include the specified list of namespaces, an 
-        --include-namespace          empty list includes all namespaces
-    -t, --timeout TIMEOUT            Threshold for pods to be in the pending state
-    -f, --filter FILTER              Label selector for pods to be checked (example -- key1=value1,key2!=value2)
-    -p, --pods PODS                  List of pods to check
-    -r, --restart COUNT              Threshold for number of restarts allowed
-        --kube-config KUBECONFIG     Path to a kube config file
-```
-
-**check-kube-service-available.rb**
-```
-Usage: check-kube-service-available.rb (options)
-        --ca-file CA-FILE            CA file to verify API server cert
-        --cert CERT-FILE             Client cert to present
-        --key KEY-FILE               Client key for the client cert
-        --in-cluster                 Use service account authentication
-        --password PASSWORD          If user is passed, also pass a password
-    -s, --api-server URL             URL to API server
-    -t, --token TOKEN                Bearer token for authorization
-        --token-file TOKEN-FILE      File containing bearer token for authorization
-    -u, --user USER                  User with access to API
-    -v, --api-version VERSION        API version
-        --in-namespace               If running in K8S, operate in running namespace
-    -p, --pending SECONDS            Time (in seconds) a pod may be pending for and be valid
-    -l, --list SERVICES              List of services to check (required)
-        --kube-config KUBECONFIG     Path to a kube config file
-```
-
-**check-kube-pods-runtime.rb**
-```
-Usage: check-kube-pods-runtime.rb (options)
-        --ca-file CA-FILE            CA file to verify API server cert
-        --cert CERT-FILE             Client cert to present
-        --key KEY-FILE               Client key for the client cert
-        --in-cluster                 Use service account authentication
-        --password PASSWORD          If user is passed, also pass a password
-    -s, --api-server URL             URL to API server
-    -t, --token TOKEN                Bearer token for authorization
-        --token-file TOKEN-FILE      File containing bearer token for authorization
-    -u, --user USER                  User with access to API
-    -v, --api-version VERSION        API version
-        --in-namespace               If running in K8S, operate in running namespace
-    -c, --critical COUNT             Threshold for Pods to be critical
-    -f, --filter FILTER              Label selector for pods to be checked (example -- key1=value1,key2!=value2)
-    -p, --pods PODS                  List of pods to check
-    -w, --warn TIMEOUT               Threshold for pods to be in the pending state
-        --kube-config KUBECONFIG     Path to a kube config file
-```
-
-**check-kube-pods-running.rb**
-```
-Usage: ./check-kube-pods-running.rb (options)
-        --ca-file CA-FILE            CA file to verify API server cert
-        --cert CERT-FILE             Client cert to present
-        --key KEY-FILE               Client key for the client cert
-        --in-cluster                 Use service account authentication
-        --password PASSWORD          If user is passed, also pass a password
-    -s, --api-server URL             URL to API server
-    -t, --token TOKEN                Bearer token for authorization
-        --token-file TOKEN-FILE      File containing bearer token for authorization
-    -u, --user USER                  User with access to API
-    -v, --api-version VERSION        API version
-        --in-namespace               If running in K8S, operate in running namespace
-    -n NAMESPACES,                   Exclude the specified list of namespaces
-        --exclude-namespace
-    -i NAMESPACES,                   Include the specified list of namespaces, an 
-        --include-namespace          empty list includes all namespaces
-    -f, --filter FILTER              Label selector for pods to be checked (example -- key1=value1,key2!=value2)
-    -p, --pods PODS                  List of pods to check
-        --kube-config KUBECONFIG     Path to a kube config file
-```
-
-**check-kube-pods-restarting.rb**
-```
-Usage: ./check-kube-pods-restarting.rb (options)
-        --ca-file CA-FILE            CA file to verify API server cert
-        --cert CERT-FILE             Client cert to present
-        --key KEY-FILE               Client key for the client cert
-        --in-cluster                 Use service account authentication
-        --password PASSWORD          If user is passed, also pass a password
-    -s, --api-server URL             URL to API server
-    -t, --token TOKEN                Bearer token for authorization
-        --token-file TOKEN-FILE      File containing bearer token for authorization
-    -u, --user USER                  User with access to API
-    -v, --api-version VERSION        API version
-        --in-namespace               If running in K8S, operate in running namespace
-    -n NAMESPACES,                   Exclude the specified list of namespaces
-        --exclude-namespace
-    -i NAMESPACES,                   Include the specified list of namespaces, an 
-        --include-namespace          empty list includes all namespaces
-    -f, --filter FILTER              Label selector for pods to be checked (example -- key1=value1,key2!=value2)
-    -p, --pods PODS                  List of pods to check
-    -r, --restart COUNT              Threshold for number of restarts allowed
         --kube-config KUBECONFIG     Path to a kube config file
 ```
 
@@ -188,6 +63,157 @@ Usage: ./check-kube-certs.rb (options)
         --kube-config KUBECONFIG     Path to a kube config file
     -f, --filter FILTER              Label selector for pods to be checked (example -- key1=value1,key2!=value2)
     -w, --warn DAYS                  Number of days to alert warning before certificate expires
+```
+
+**check-kube-external-dns-services.rb**
+```
+Usage:
+        --ca-file CA-FILE            CA file to verify API server cert
+        --cert CERT-FILE             Client cert to present
+        --key KEY-FILE               Client key for the client cert
+        --in-cluster                 Use service account authentication
+        --password PASSWORD          If user is passed, also pass a password
+    -s, --api-server URL             URL to API server
+    -t, --token TOKEN                Bearer token for authorization
+        --token-file TOKEN-FILE      File containing bearer token for authorization
+    -u, --user USER                  User with access to API
+    -v, --api-version VERSION        API version. Defaults to 'v1'
+        --in-namespace               If running in K8S, operate in running namespace
+    -n NAMESPACES,                   Exclude the specified list of namespaces
+        --exclude-namespace
+    -i NAMESPACES,                   Include the specified list of namespaces, an
+        --include-namespace          empty list includes all namespaces
+    -f, --filter FILTER              Selector filter for services to be checked
+        --services SERVICES          Optional list of services to check.
+        --kube-config KUBECONFIG     Path to a kube config file
+```
+
+**check-kube-nodes-ready.rb**
+```
+Usage: check-kube-nodes-ready.rb (options)
+        --ca-file CA-FILE            CA file to verify API server cert
+        --cert CERT-FILE             Client cert to present
+        --key KEY-FILE               Client key for the client cert
+        --in-cluster                 Use service account authentication
+    -p, --password PASSWORD          If user is passed, also pass a password
+    -s, --api-server URL             URL to API server
+    -t, --token TOKEN                Bearer token for authorization
+        --token-file TOKEN-FILE      File containing bearer token for authorization
+    -u, --user USER                  User with access to API
+    -v, --api-version VERSION        API version
+        --kube-config KUBECONFIG     Path to a kube config file
+```
+
+**check-kube-pods-pending.rb**
+```
+Usage: check-kube-pods-pending.rb (options)
+        --ca-file CA-FILE            CA file to verify API server cert
+        --cert CERT-FILE             Client cert to present
+        --key KEY-FILE               Client key for the client cert
+        --in-cluster                 Use service account authentication
+        --password PASSWORD          If user is passed, also pass a password
+    -s, --api-server URL             URL to API server
+        --token TOKEN                Bearer token for authorization
+        --token-file TOKEN-FILE      File containing bearer token for authorization
+    -u, --user USER                  User with access to API
+    -v, --api-version VERSION        API version
+        --in-namespace               If running in K8S, operate in running namespace
+    -n NAMESPACES,                   Exclude the specified list of namespaces
+        --exclude-namespace
+    -i NAMESPACES,                   Include the specified list of namespaces, an
+        --include-namespace          empty list includes all namespaces
+    -t, --timeout TIMEOUT            Threshold for pods to be in the pending state
+    -f, --filter FILTER              Label selector for pods to be checked (example -- key1=value1,key2!=value2)
+    -p, --pods PODS                  List of pods to check
+    -r, --restart COUNT              Threshold for number of restarts allowed
+        --kube-config KUBECONFIG     Path to a kube config file
+```
+
+**check-kube-pods-restarting.rb**
+```
+Usage: ./check-kube-pods-restarting.rb (options)
+        --ca-file CA-FILE            CA file to verify API server cert
+        --cert CERT-FILE             Client cert to present
+        --key KEY-FILE               Client key for the client cert
+        --in-cluster                 Use service account authentication
+        --password PASSWORD          If user is passed, also pass a password
+    -s, --api-server URL             URL to API server
+    -t, --token TOKEN                Bearer token for authorization
+        --token-file TOKEN-FILE      File containing bearer token for authorization
+    -u, --user USER                  User with access to API
+    -v, --api-version VERSION        API version
+        --in-namespace               If running in K8S, operate in running namespace
+    -n NAMESPACES,                   Exclude the specified list of namespaces
+        --exclude-namespace
+    -i NAMESPACES,                   Include the specified list of namespaces, an
+        --include-namespace          empty list includes all namespaces
+    -f, --filter FILTER              Label selector for pods to be checked (example -- key1=value1,key2!=value2)
+    -p, --pods PODS                  List of pods to check
+    -r, --restart COUNT              Threshold for number of restarts allowed
+        --kube-config KUBECONFIG     Path to a kube config file
+```
+
+**check-kube-pods-running.rb**
+```
+Usage: ./check-kube-pods-running.rb (options)
+        --ca-file CA-FILE            CA file to verify API server cert
+        --cert CERT-FILE             Client cert to present
+        --key KEY-FILE               Client key for the client cert
+        --in-cluster                 Use service account authentication
+        --password PASSWORD          If user is passed, also pass a password
+    -s, --api-server URL             URL to API server
+    -t, --token TOKEN                Bearer token for authorization
+        --token-file TOKEN-FILE      File containing bearer token for authorization
+    -u, --user USER                  User with access to API
+    -v, --api-version VERSION        API version
+        --in-namespace               If running in K8S, operate in running namespace
+    -n NAMESPACES,                   Exclude the specified list of namespaces
+        --exclude-namespace
+    -i NAMESPACES,                   Include the specified list of namespaces, an
+        --include-namespace          empty list includes all namespaces
+    -f, --filter FILTER              Label selector for pods to be checked (example -- key1=value1,key2!=value2)
+    -p, --pods PODS                  List of pods to check
+        --kube-config KUBECONFIG     Path to a kube config file
+```
+
+**check-kube-pods-runtime.rb**
+```
+Usage: check-kube-pods-runtime.rb (options)
+        --ca-file CA-FILE            CA file to verify API server cert
+        --cert CERT-FILE             Client cert to present
+        --key KEY-FILE               Client key for the client cert
+        --in-cluster                 Use service account authentication
+        --password PASSWORD          If user is passed, also pass a password
+    -s, --api-server URL             URL to API server
+    -t, --token TOKEN                Bearer token for authorization
+        --token-file TOKEN-FILE      File containing bearer token for authorization
+    -u, --user USER                  User with access to API
+    -v, --api-version VERSION        API version
+        --in-namespace               If running in K8S, operate in running namespace
+    -c, --critical COUNT             Threshold for Pods to be critical
+    -f, --filter FILTER              Label selector for pods to be checked (example -- key1=value1,key2!=value2)
+    -p, --pods PODS                  List of pods to check
+    -w, --warn TIMEOUT               Threshold for pods to be in the pending state
+        --kube-config KUBECONFIG     Path to a kube config file
+```
+
+**check-kube-service-available.rb**
+```
+Usage: check-kube-service-available.rb (options)
+        --ca-file CA-FILE            CA file to verify API server cert
+        --cert CERT-FILE             Client cert to present
+        --key KEY-FILE               Client key for the client cert
+        --in-cluster                 Use service account authentication
+        --password PASSWORD          If user is passed, also pass a password
+    -s, --api-server URL             URL to API server
+    -t, --token TOKEN                Bearer token for authorization
+        --token-file TOKEN-FILE      File containing bearer token for authorization
+    -u, --user USER                  User with access to API
+    -v, --api-version VERSION        API version
+        --in-namespace               If running in K8S, operate in running namespace
+    -p, --pending SECONDS            Time (in seconds) a pod may be pending for and be valid
+    -l, --list SERVICES              List of services to check (required)
+        --kube-config KUBECONFIG     Path to a kube config file
 ```
 
 **handler-kube-pod.rb**
