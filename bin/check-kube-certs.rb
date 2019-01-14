@@ -97,9 +97,9 @@ class CheckKubernetesCertificates < Sensu::Plugins::Kubernetes::CLI
       cert_expiration = loaded_cert.not_after # Kube returns these in UTC
 
       if (cert_expiration - time_now_utc) < config[:critical]
-        crit_expire_certs << cert['metadata']['name']
+        crit_expire_certs << "#{cert['metadata']['namespace']}/#{cert['metadata']['name']}"
       elsif (cert_expiration - time_now_utc) < config[:warn]
-        warn_expire_certs << cert['metadata']['name']
+        warn_expire_certs << "#{cert['metadata']['namespace']}/#{cert['metadata']['name']}"
       end
     end
 
