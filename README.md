@@ -168,7 +168,7 @@ Usage: ./check-kube-pods-restarting.rb (options)
 
 **check-kube-certs.rb**
 ```
-Usage: check-kube-certs.rb (options)
+Usage: ./check-kube-certs.rb (options)
         --ca-file CA-FILE            CA file to verify API server cert
         --cert CERT-FILE             Client cert to present
         --key KEY-FILE               Client key for the client cert
@@ -179,14 +179,15 @@ Usage: check-kube-certs.rb (options)
         --token-file TOKEN-FILE      File containing bearer token for authorization
     -u, --user USER                  User with access to API
     -v, --api-version VERSION        API version
+    -c, --critical DAYS              Number of days to alert critically before certificate expires (default 7 days)
     -n NAMESPACES,                   Exclude the specified list of namespaces
         --exclude-namespace
-    -e, --expiration-window DAYS     Number of day to notify before certificate expires (default 7 days)
         --in-namespace               Operate in the namespace of the pod running the check (when running in-cluster)
     -i NAMESPACES,                   Include the specified list of namespaces
         --include-namespace
         --kube-config KUBECONFIG     Path to a kube config file
     -f, --filter FILTER              Label selector for pods to be checked (example -- key1=value1,key2!=value2)
+    -w, --warn DAYS                  Number of days to alert warning before certificate expires
 ```
 
 **handler-kube-pod.rb**
