@@ -34,7 +34,7 @@
 # -f, --filter FILTER              Selector filter for pods to be checked
 #                                  Defaults to 'all'
 # -e DAYS,
-#    --expiration_window           Numberof days to notify before certificate expires
+#    --expiration_window           Number of days to notify before certificate expires
 #
 # NOTES:
 # => The filter used for the -f flag is in the form key=value. If multiple
@@ -66,39 +66,53 @@ class CheckKubernetesCertificates < Sensu::Plugins::Kubernetes::CLI
          proc: proc { |a| a.split(',') },
          default: ''
 
-  option :expiration_window,
-         description: 'Number of day to notify before certificate expires (default 7 days)',
-         short: '-e DAYS',
-         long: '--expiration-window',
+  option :critical,
+         description: 'Number of days to alert critically before certificate expires (default 7 days)',
+         short: '-c DAYS',
+         long: '--critical',
          proc: proc { |a| a.to_i * 86_400 },
          default: 7
 
+  option :warn,
+         description: 'Number of days to alert warning before certificate expires',
+         short: '-w DAYS',
+         long: '--warn',
+         proc: proc { |a| a.to_i * 86_400 },
+         default: 14
+
+  @@all_certs = []
+  @@crit_expire_certs = []
+  @@warn_expire_certs = []
+  @@wonky_certs = []
+
   def run
-    all_certs = []
-    bad_certs = []
-    wonky_certs = []
     secrets = client.get_secrets(namespace: namespace)
     secrets.each do |secret|
-      all_certs << secret if secret['metadata']['annotations'].to_s.include?('certmanager')
+      @@all_certs << secret if secret['metadata']['annotations'].to_s.include?('certmanager') && !should_exclude_namespace(namespace)
     end
 
-    all_certs.each do |cert|
+    @@all_certs.each do |cert|
       loaded_cert = validate_cert(Base64.decode64(cert['data'][:'tls.crt']))
       time_now_utc = Time.now.utc
       cert_expiration = loaded_cert.not_after # Kube returns these in UTC
 
-      if (cert_expiration - time_now_utc) < config[:expiration_window]
-        bad_certs << cert['metadata']['name']
+      if (cert_expiration - time_now_utc) < config[:critical]
+        @@crit_expire_certs << cert['metadata']['name']
+      elsif (cert_expiration - time_now_utc) < config[:warn]
+        @@warn_expire_certs << cert['metadata']['name']
       end
     end
 
-    if bad_certs.empty?
-      ok 'All certificates are valid and are not expiring soon'
-    elsif wonky_certs.any?
-      warn "Error parsing cert(s): #{wonky_certs.join(' ')}"
+    if @@crit_expire_certs.any?
+      critical "The following cert(s) are expiring in less than #{config[:critical] / 86_400} days: #{@@crit_expire_certs.join(' ')}"
+    elsif @@warn_expire_certs.any?
+      warning "The following cert(s) are expiring in less than #{config[:warn] / 86_400} days: #{@@warn_expire_certs.join(' ')}"
+    elsif @@wonky_certs.any?
+      critical "Error parsing cert(s): #{@@wonky_certs.join(' ')}"
     else
-      critical "The following cert(s) are expiring in less than #{config[:expiration_window] / 86_400} days: #{bad_certs.join(' ')}"
+      ok 'All certificates are valid and are not expiring soon'
     end
+
   rescue KubeException => e
     critical 'API error: ' << e.message
   end
@@ -106,7 +120,7 @@ class CheckKubernetesCertificates < Sensu::Plugins::Kubernetes::CLI
   def validate_cert(cert)
     OpenSSL::X509::Certificate.new cert
   rescue CertificateError => e
-    wonky_certs << "Error Parsing: #{cert['metadata']['name']} #{e}"
+    @@wonky_certs << "Error Parsing: #{cert['metadata']['name']} #{e}"
   end
 
   def should_exclude_namespace(namespace)
