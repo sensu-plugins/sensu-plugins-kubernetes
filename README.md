@@ -10,13 +10,14 @@
 This provides functionality to check node and pod status as well as api and service availability.
 
 ## Files
-- bin/check-kube-nodes-ready.rb
 - bin/check-kube-apiserver-available.rb
+- bin/check-kube-certs.rb
+- bin/check-kube-nodes-ready.rb
 - bin/check-kube-pods-pending.rb
-- bin/check-kube-service-available.rb
-- bin/check-kube-pods-runtime.rb
-- bin/check-kube-pods-running.rb
 - bin/check-kube-pods-restarting.rb
+- bin/check-kube-pods-running.rb
+- bin/check-kube-pods-runtime.rb
+- bin/check-kube-service-available.rb
 - bin/handler-kube-pod.rb
 - bin/metrics-pods.rb
 
@@ -142,7 +143,6 @@ Usage: ./check-kube-pods-running.rb (options)
 ```
 
 **check-kube-pods-restarting.rb**
-
 ```
 Usage: ./check-kube-pods-restarting.rb (options)
         --ca-file CA-FILE            CA file to verify API server cert
@@ -164,6 +164,30 @@ Usage: ./check-kube-pods-restarting.rb (options)
     -p, --pods PODS                  List of pods to check
     -r, --restart COUNT              Threshold for number of restarts allowed
         --kube-config KUBECONFIG     Path to a kube config file
+```
+
+**check-kube-certs.rb**
+```
+Usage: ./check-kube-certs.rb (options)
+        --ca-file CA-FILE            CA file to verify API server cert
+        --cert CERT-FILE             Client cert to present
+        --key KEY-FILE               Client key for the client cert
+        --in-cluster                 Use service account authentication
+    -p, --password PASSWORD          If user is passed, also pass a password
+    -s, --api-server URL             URL to API server
+    -t, --token TOKEN                Bearer token for authorization
+        --token-file TOKEN-FILE      File containing bearer token for authorization
+    -u, --user USER                  User with access to API
+    -v, --api-version VERSION        API version
+    -c, --critical DAYS              Number of days to alert critically before certificate expires (default 7 days)
+    -n NAMESPACES,                   Exclude the specified list of namespaces
+        --exclude-namespace
+        --in-namespace               Operate in the namespace of the pod running the check (when running in-cluster)
+    -i NAMESPACES,                   Include the specified list of namespaces
+        --include-namespace
+        --kube-config KUBECONFIG     Path to a kube config file
+    -f, --filter FILTER              Label selector for pods to be checked (example -- key1=value1,key2!=value2)
+    -w, --warn DAYS                  Number of days to alert warning before certificate expires
 ```
 
 **handler-kube-pod.rb**
