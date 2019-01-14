@@ -16,25 +16,26 @@
 #   gem: kube-client
 #
 # USAGE:
+# --ca-file CA-FILE            CA file to verify API server cert
+# --cert CERT-FILE             Client cert to present
+# --key KEY-FILE               Client key for the client cert
+# --in-cluster                 Use service account authentication
+# -p, --password PASSWORD          If user is passed, also pass a password
 # -s, --api-server URL             URL to API server
-# -v, --api-version VERSION        API version. Defaults to 'v1'
-#     --in-cluster                 Use service account authentication
-#     --ca-file CA-FILE            CA file to verify API server cert
-#     --cert CERT-FILE             Client cert to present
-#     --key KEY-FILE               Client key for the client cert
+# -t, --token TOKEN                Bearer token for authorization
+# --token-file TOKEN-FILE      File containing bearer token for authorization
 # -u, --user USER                  User with access to API
-#     --password PASSWORD          If user is passed, also pass a password
-#     --token TOKEN                Bearer token for authorization
-#     --token-file TOKEN-FILE      File containing bearer token for authorization
-#     --in-namespace               If running in K8S, operate in running namespace
+# -v, --api-version VERSION        API version
+# -c, --critical DAYS              Number of days to alert critically before certificate expires (default 7 days)
 # -n NAMESPACES,                   Exclude the specified list of namespaces
-#     --exclude-namespace
-# -i NAMESPACES,                   Include the specified list of namespaces, an
-#     --include-namespace          empty list includes all namespaces
-# -f, --filter FILTER              Selector filter for pods to be checked
-#                                  Defaults to 'all'
-# -e DAYS,
-#    --expiration_window           Number of days to notify before certificate expires
+# --exclude-namespace
+# --in-namespace               Operate in the namespace of the pod running the check (when running in-cluster)
+# -i NAMESPACES,                   Include the specified list of namespaces
+# --include-namespace
+# --kube-config KUBECONFIG     Path to a kube config file
+# -f, --filter FILTER              Label selector for pods to be checked (example -- key1=value1,key2!=value2)
+# -w, --warn DAYS                  Number of days to alert warning before certificate expires (default 14 days)
+
 #
 # NOTES:
 # => The filter used for the -f flag is in the form key=value. If multiple
@@ -74,41 +75,40 @@ class CheckKubernetesCertificates < Sensu::Plugins::Kubernetes::CLI
          default: 7
 
   option :warn,
-         description: 'Number of days to alert warning before certificate expires',
+         description: 'Number of days to alert warning before certificate expires (default 14 days)',
          short: '-w DAYS',
          long: '--warn',
          proc: proc { |a| a.to_i * 86_400 },
          default: 14
 
-  @@all_certs = []
-  @@crit_expire_certs = []
-  @@warn_expire_certs = []
-  @@wonky_certs = []
-
   def run
+    all_certs = []
+    crit_expire_certs = []
+    warn_expire_certs = []
+    wonky_certs = []
     secrets = client.get_secrets(namespace: namespace)
     secrets.each do |secret|
-      @@all_certs << secret if secret['metadata']['annotations'].to_s.include?('certmanager') && !should_exclude_namespace(namespace)
+      all_certs << secret if secret['metadata']['annotations'].to_s.include?('certmanager') && !should_exclude_namespace(secret['metadata']['namespace'])
     end
 
-    @@all_certs.each do |cert|
-      loaded_cert = validate_cert(Base64.decode64(cert['data'][:'tls.crt']))
+    all_certs.each do |cert|
+      loaded_cert = validate_cert(Base64.decode64(cert['data'][:'tls.crt']), wonky_certs)
       time_now_utc = Time.now.utc
       cert_expiration = loaded_cert.not_after # Kube returns these in UTC
 
       if (cert_expiration - time_now_utc) < config[:critical]
-        @@crit_expire_certs << cert['metadata']['name']
+        crit_expire_certs << cert['metadata']['name']
       elsif (cert_expiration - time_now_utc) < config[:warn]
-        @@warn_expire_certs << cert['metadata']['name']
+        warn_expire_certs << cert['metadata']['name']
       end
     end
 
-    if @@crit_expire_certs.any?
-      critical "The following cert(s) are expiring in less than #{config[:critical] / 86_400} days: #{@@crit_expire_certs.join(' ')}"
-    elsif @@warn_expire_certs.any?
-      warning "The following cert(s) are expiring in less than #{config[:warn] / 86_400} days: #{@@warn_expire_certs.join(' ')}"
-    elsif @@wonky_certs.any?
-      critical "Error parsing cert(s): #{@@wonky_certs.join(' ')}"
+    if crit_expire_certs.any?
+      critical "The following cert(s) are expiring in less than #{config[:critical] / 86_400} days: #{crit_expire_certs.join(' ')}"
+    elsif warn_expire_certs.any?
+      warning "The following cert(s) are expiring in less than #{config[:warn] / 86_400} days: #{warn_expire_certs.join(' ')}"
+    elsif wonky_certs.any?
+      critical "Error parsing cert(s): #{wonky_certs.join(' ')}"
     else
       ok 'All certificates are valid and are not expiring soon'
     end
@@ -117,10 +117,10 @@ class CheckKubernetesCertificates < Sensu::Plugins::Kubernetes::CLI
     critical 'API error: ' << e.message
   end
 
-  def validate_cert(cert)
+  def validate_cert(cert, wonky_certs)
     OpenSSL::X509::Certificate.new cert
   rescue CertificateError => e
-    @@wonky_certs << "Error Parsing: #{cert['metadata']['name']} #{e}"
+    wonky_certs << "Error Parsing: #{cert['metadata']['name']} #{e}"
   end
 
   def should_exclude_namespace(namespace)
