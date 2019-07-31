@@ -27,7 +27,7 @@ Gem::Specification.new do |s| # rubocop:disable Metrics/BlockLength
   s.test_files             = s.files.grep(%r{^(test|spec|features)/})
   s.version                = SensuPluginsKubernetes::Version::VER_STRING
 
-  s.add_runtime_dependency 'sensu-plugin',   '~> 2.7'
+  s.add_runtime_dependency 'sensu-plugin',   '~> 4.0'
 
   s.add_runtime_dependency 'activesupport',  '< 5.0.0'
   s.add_runtime_dependency 'kubeclient',     '~> 2.3'

@@ -16,14 +16,23 @@ script:
 - bundle exec rake default
 - gem build sensu-plugins-kubernetes.gemspec
 - gem install sensu-plugins-kubernetes-*.gem
+before_deploy:
+  - bash -c "[ ! -d bonsai/ ] && git clone https://github.com/sensu/sensu-go-bonsai-asset.git bonsai || echo 'bonsai/ exists, skipping git clone'"
 deploy:
-  provider: rubygems
-  api_key:
-    secure: EzXA4HctGH56NvP4RS+vEntVwB5q3K7xDnvCS7KQrZIly7B5rlXhJgHzrcdS61AAHybF/C4btOIazx3lkI+TihX3zyztziHa4+vwcavhF86TDk4MmDgYqScSL9agP+LOHlQ38jLY/l8buGLgF96V1/pgNZjnw5vTugE3GXtDfPF6f6CXg/3RqADF8yjglb9HAxWYEkwmPLZynbtHFJA9/h5mggVfjHJFAZLFHsewx4FB4FjxMrt3yusIlNbj9LKHHqsQqJl8DCoxGhiQmysSLS3NoN7vVhi3UA4TdHArtSZgRmsZKhsJDGcgM/DWGFvqmnHTItlAVTKPZhSAYBxIsbpY5adGMNE/QDDDbnjqhCE5PZQ1mQq12E1dmcFGZAV7vVPvzkBGCMNLnlH6KFuqw/mUg/BU7xPPMnvsc51XEbYJtFFZ1UGeJWTe0DTrLCmIZd4r9KaydNeal35iu/s+rC9aPh9u0AsSJiKVi3CewoVAgc+A+uF8WTTjol0APwO4sra4JlNBeKMVgq2/4uEzsSDCz+Y/U4Rw8RLLXi6xGB1PM1Ar9SvIabeoNj9gY+LApYI1YAPUUVUXf44TLSwvDSrUW12DnhPgMg0CjicGlZkXOAnDNob8b8bU8YUP7wN8eOwt0J63hhn40G7XCA5WCpNm0W7qbLlV8sUBb+3F07c=
-  gem: sensu-plugins-kubernetes
-  on:
-    tags: true
-    all_branches: true
-    rvm: 2.3.0
-    rvm: 2.4.1
-    repo: sensu-plugins/sensu-plugins-kubernetes
+  - provider: rubygems
+    api_key:
+      secure: EzXA4HctGH56NvP4RS+vEntVwB5q3K7xDnvCS7KQrZIly7B5rlXhJgHzrcdS61AAHybF/C4btOIazx3lkI+TihX3zyztziHa4+vwcavhF86TDk4MmDgYqScSL9agP+LOHlQ38jLY/l8buGLgF96V1/pgNZjnw5vTugE3GXtDfPF6f6CXg/3RqADF8yjglb9HAxWYEkwmPLZynbtHFJA9/h5mggVfjHJFAZLFHsewx4FB4FjxMrt3yusIlNbj9LKHHqsQqJl8DCoxGhiQmysSLS3NoN7vVhi3UA4TdHArtSZgRmsZKhsJDGcgM/DWGFvqmnHTItlAVTKPZhSAYBxIsbpY5adGMNE/QDDDbnjqhCE5PZQ1mQq12E1dmcFGZAV7vVPvzkBGCMNLnlH6KFuqw/mUg/BU7xPPMnvsc51XEbYJtFFZ1UGeJWTe0DTrLCmIZd4r9KaydNeal35iu/s+rC9aPh9u0AsSJiKVi3CewoVAgc+A+uF8WTTjol0APwO4sra4JlNBeKMVgq2/4uEzsSDCz+Y/U4Rw8RLLXi6xGB1PM1Ar9SvIabeoNj9gY+LApYI1YAPUUVUXf44TLSwvDSrUW12DnhPgMg0CjicGlZkXOAnDNob8b8bU8YUP7wN8eOwt0J63hhn40G7XCA5WCpNm0W7qbLlV8sUBb+3F07c=
+    gem: sensu-plugins-kubernetes
+    on:
+      tags: true
+      all_branches: true
+      rvm: 2.3.0
+      rvm: 2.4.1
+      repo: sensu-plugins/sensu-plugins-kubernetes
+  - provider: script
+    script: bonsai/ruby-runtime/travis-build-ruby-plugin-assets.sh sensu-plugins-kubernetes
+    skip_cleanup: true
+    on:
+      tags: true
+      all_branches: true
+      rvm: 2.4.1    
