@@ -28,7 +28,7 @@ deploy:
       all_branches: true
       rvm: 2.3.0
       rvm: 2.4.1
-      repo: funkypenguin/sensu-plugins-kubernetes
+      repo: sensu-plugins/sensu-plugins-kubernetes
   - provider: script
     script: bonsai/ruby-runtime/travis-build-ruby-plugin-assets.sh sensu-plugins-kubernetes
     skip_cleanup: true
