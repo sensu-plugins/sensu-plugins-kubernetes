@@ -5,6 +5,8 @@ This CHANGELOG follows the format listed [here ](https://github.com/sensu-plugin
 
 ## [Unreleased]
 
+– `check-kube-pods-running.rb`: fix "no implicit conversion of nil into String" exception when POD's status.phase == Pending (@ttarczynski)
+
 ## [4.0.0] - 2018-12-15
 ### Security
 - updated rubocop dependency to `~> 0.51.0` per: https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-8418. (@majormoses)
