@@ -5,6 +5,8 @@ This CHANGELOG follows the format listed [here ](https://github.com/sensu-plugin
 
 ## [Unreleased]
 
+
+## [4.0.1] - 2020-03-18
 ### Fixed
 – `check-kube-pods-running.rb`: when POD's status.phase == Pending use the creation time rather than the start time to determine the pod timestamp as it will be nil and cause a downstream type error (@ttarczynski)
 
@@ -99,7 +101,8 @@ pending pods, the restart count portion has been split into it's own check, `che
 ### Added
 - initial release
 
-[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/4.0.0...HEAD
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/4.0.1...HEAD
+[4.0.1]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/4.0.0...4.0.1
 [4.0.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.3.0...4.0.0
 [3.3.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.2.0...3.3.0
 [3.2.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.1.1...3.2.0
