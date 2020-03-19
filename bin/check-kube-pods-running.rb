@@ -117,11 +117,11 @@ class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
       next if should_exclude_node(pod.spec.nodeName)
       next unless pods_list.include?(pod.metadata.name) || pods_list.include?('all')
       next unless pod.status.phase != 'Succeeded' && !pod.status.conditions.nil?
-			if pod.status.phase == 'Pending'
-				pod_stamp = Time.parse(pod.metadata.creationTimestamp)
-			else
-				pod_stamp = Time.parse(pod.status.startTime)
-			end
+      pod_stamp = if pod.status.phase == 'Pending'
+                    Time.parse(pod.metadata.creationTimestamp)
+                  else
+                    Time.parse(pod.status.startTime)
+                  end
       runtime = (Time.now.utc - pod_stamp.utc).to_i
       next if runtime < config[:not_ready_time]
       failed_pods << pod.metadata.name unless ready? pod
