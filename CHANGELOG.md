@@ -5,7 +5,8 @@ This CHANGELOG follows the format listed [here ](https://github.com/sensu-plugin
 
 ## [Unreleased]
 
-– `check-kube-pods-running.rb`: fix "no implicit conversion of nil into String" exception when POD's status.phase == Pending (@ttarczynski)
+### Fixed
+– `check-kube-pods-running.rb`: when POD's status.phase == Pending use the creation time rather than the start time to determine the pod timestamp as it will be nil and cause a downstream type error (@ttarczynski)
 
 ## [4.0.0] - 2018-12-15
 ### Security
