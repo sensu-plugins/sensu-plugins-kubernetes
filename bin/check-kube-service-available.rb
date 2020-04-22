@@ -1,5 +1,6 @@
 #! /usr/bin/env ruby
-#
+# frozen_string_literal: true
+
 #   check-kube-pods-service-available
 #
 # DESCRIPTION:
@@ -63,6 +64,7 @@ class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
     # TODO: come back and clean me up
     s.each do |a| # rubocop:disable Metrics/BlockLength
       next unless services.include?(a.metadata.name)
+
       # Build the selector key so we can fetch the corresponding pod
       selector_key = []
       services.delete(a.metadata.name)
@@ -70,6 +72,7 @@ class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
         selector_key << "#{k}=#{v}"
       end
       next if selector_key.empty?
+
       # Get the pod
       pod = nil
       begin
@@ -79,11 +82,13 @@ class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
       end
       # Make sure our pod is running
       next if pod.nil?
+
       pod_available = false
       pod.each do |p|
         case p.status.phase
         when 'Pending'
           next if p.status.startTime.nil?
+
           if (Time.now - Time.parse(p.status.startTime)).to_i < config[:pendingTime]
             pod_available = true
             break
@@ -91,6 +96,7 @@ class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
         when 'Running'
           p.status.conditions.each do |c|
             next unless c.type == 'Ready'
+
             if c.status == 'True'
               pod_available = true
               break
@@ -116,8 +122,9 @@ class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
   end
 
   def parse_list(list)
-    return list.split(',') if list && list.include?(',')
+    return list.split(',') if list&.include?(',')
     return [list] if list
+
     ['']
   end
 end

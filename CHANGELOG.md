@@ -5,6 +5,19 @@ This CHANGELOG follows the format listed [here ](https://github.com/sensu-plugin
 
 ## [Unreleased]
 
+### Breaking Changes
+- Bump `sensu-plugin` dependency from `~> 2.7` to `~> 4.0`
+- Bump `activesupport` dependancy to '< 7.0.0'
+- Bump `kubeclient` dependency to '>= 2.3', '< 5.0'
+
+### Added
+- Bonsai asset support
+
+### Changed
+- Updated rubocop dependency to '~> 0.81.0'
+- Remediated rubocop issues
+- Updated rake dependency to '~> 13.0'
+- Removed codeclimate-test-reporter
 
 ## [4.0.1] - 2020-03-18
 ### Fixed

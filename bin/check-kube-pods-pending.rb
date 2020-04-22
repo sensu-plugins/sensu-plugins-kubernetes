@@ -1,5 +1,6 @@
 #! /usr/bin/env ruby
-#
+# frozen_string_literal: true
+
 #   check-kube-pods-pending
 #
 # DESCRIPTION:
@@ -121,6 +122,7 @@ class AllPodsAreReady < Sensu::Plugins::Kubernetes::CLI
       next unless pods_list.include?(pod.metadata.name) || pods_list.include?('all')
       # Check for pending state
       next unless pod.status.phase == 'Pending'
+
       pod_stamp = Time.parse(pod.metadata.creationTimestamp)
       puts pod.metadata.name
       if (Time.now.utc - pod_stamp.utc).to_i > config[:pending_timeout]
@@ -137,13 +139,15 @@ class AllPodsAreReady < Sensu::Plugins::Kubernetes::CLI
   end
 
   def parse_list(list)
-    return list.split(',') if list && list.include?(',')
+    return list.split(',') if list&.include?(',')
     return [list] if list
+
     ['']
   end
 
   def should_exclude_namespace(namespace)
     return !config[:include_namespace].include?(namespace) unless config[:include_namespace].empty?
+
     config[:exclude_namespace].include?(namespace)
   end
 end

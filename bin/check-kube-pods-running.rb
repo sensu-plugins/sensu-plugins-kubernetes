@@ -1,5 +1,6 @@
 #! /usr/bin/env ruby
-#
+# frozen_string_literal: true
+
 #   check-kube-pods-running
 #
 # DESCRIPTION:
@@ -117,6 +118,7 @@ class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
       next if should_exclude_node(pod.spec.nodeName)
       next unless pods_list.include?(pod.metadata.name) || pods_list.include?('all')
       next unless pod.status.phase != 'Succeeded' && !pod.status.conditions.nil?
+
       pod_stamp = if pod.status.phase == 'Pending'
                     Time.parse(pod.metadata.creationTimestamp)
                   else
@@ -124,6 +126,7 @@ class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
                   end
       runtime = (Time.now.utc - pod_stamp.utc).to_i
       next if runtime < config[:not_ready_time]
+
       failed_pods << pod.metadata.name unless ready? pod
     end
 
@@ -137,13 +140,15 @@ class AllPodsAreRunning < Sensu::Plugins::Kubernetes::CLI
   end
 
   def parse_list(list)
-    return list.split(',') if list && list.include?(',')
+    return list.split(',') if list&.include?(',')
     return [list] if list
+
     ['']
   end
 
   def should_exclude_namespace(namespace)
     return !config[:include_namespace].include?(namespace) unless config[:include_namespace].empty?
+
     config[:exclude_namespace].include?(namespace)
   end
 
