@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Sensu
   module Plugins
     # Namespace for the Kubernetes sensu-plugin.

@@ -1,5 +1,6 @@
 #! /usr/bin/env ruby
-#
+# frozen_string_literal: true
+
 #   check-kube-pods-restarting
 #
 # DESCRIPTION:
@@ -120,6 +121,7 @@ class PodsRestarting < Sensu::Plugins::Kubernetes::CLI
       next unless pods_list.include?(pod.metadata.name) || pods_list.include?('all')
       # Check restarts
       next if pod.status.containerStatuses.nil?
+
       pod.status.containerStatuses.each do |container|
         if container.restartCount.to_i > config[:restart_count]
           restarted_pods << "#{pod.metadata.namespace}.#{container.name}"
@@ -137,13 +139,15 @@ class PodsRestarting < Sensu::Plugins::Kubernetes::CLI
   end
 
   def parse_list(list)
-    return list.split(',') if list && list.include?(',')
+    return list.split(',') if list&.include?(',')
     return [list] if list
+
     ['']
   end
 
   def should_exclude_namespace(namespace)
     return !config[:include_namespace].include?(namespace) unless config[:include_namespace].empty?
+
     config[:exclude_namespace].include?(namespace)
   end
 end

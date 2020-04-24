@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'sensu-plugin/check/cli'
 require 'sensu-plugins-kubernetes/client.rb'
 

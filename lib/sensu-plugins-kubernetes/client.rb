@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'kubeclient'
 require 'uri'
 
@@ -10,11 +12,11 @@ module Sensu
         # The location of the service account provided CA.
         # (if the cluster is configured to provide it)
         INCLUSTER_CA_FILE =
-          '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt'.freeze
+          '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt'
 
         # The location of the service account provided authentication token.
         INCLUSTER_TOKEN_FILE =
-          '/var/run/secrets/kubernetes.io/serviceaccount/token'.freeze
+          '/var/run/secrets/kubernetes.io/serviceaccount/token'
 
         # Creates a new Kubeclient::Client instance using the given SSL
         # and authentication options (if any)
