@@ -5,6 +5,7 @@ This CHANGELOG follows the format listed [here ](https://github.com/sensu-plugin
 
 ## [Unreleased]
 
+## [5.0.0] - 2020-04-27
 ### Breaking Changes
 - Bump `sensu-plugin` dependency from `~> 2.7` to `~> 4.0`
 - Bump `activesupport` dependancy to '< 7.0.0'
@@ -114,7 +115,8 @@ pending pods, the restart count portion has been split into it's own check, `che
 ### Added
 - initial release
 
-[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/4.0.1...HEAD
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/5.0.0...HEAD
+[5.0.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/4.0.1...5.0.0
 [4.0.1]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/4.0.0...4.0.1
 [4.0.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.3.0...4.0.0
 [3.3.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/3.2.0...3.3.0
