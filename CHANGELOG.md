@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed [here ](https://github.com/sensu-plugins/community/blob/master/HOW_WE_CHANGELOG.md)
 
 ## [Unreleased]
+
+## [5.0.2] - 2020-09-15
 ### Fixed
 - Fixed frozen_string_literal setting in executables
 
@@ -121,7 +123,8 @@ pending pods, the restart count portion has been split into it's own check, `che
 ### Added
 - initial release
 
-[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/5.0.1...HEAD
+[Unreleased]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/5.0.2...HEAD
+[5.0.2]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/5.0.1...5.0.2
 [5.0.1]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/5.0.0...5.0.1
 [5.0.0]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/4.0.1...5.0.0
 [4.0.1]: https://github.com/sensu-plugins/sensu-plugins-kubernetes/compare/4.0.0...4.0.1
