@@ -29,6 +29,7 @@
 #     --token-file TOKEN-FILE      File containing bearer token for authorization
 # -l, --list SERVICES              List of services to check (required)
 # -p, --pending SECONDS            Time (in seconds) a pod may be pending for and be valid
+#     --ignore-evicted             Ignore evicted pods when calculating availability
 #
 # NOTES:
 #
@@ -56,6 +57,12 @@ class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
          long: '--pending',
          default: 0,
          proc: proc(&:to_i)
+
+  option :ignoreEvicted,
+         description: 'Skip evicted pods when deciding if a service is available',
+         long: '--ignore-evicted',
+         boolean: true,
+         default: false
 
   def run
     services = parse_list(config[:service_list])
@@ -103,6 +110,8 @@ class AllServicesUp < Sensu::Plugins::Kubernetes::CLI
             end
             break if pod_available
           end
+        when 'Evicted'
+          next if config[:ignoreEvicted]
         end
         failed_services << "#{p.metadata.namespace}.#{p.metadata.name}" if pod_available == false
       end

@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed [here ](https://github.com/sensu-plugins/community/blob/master/HOW_WE_CHANGELOG.md)
 
 ## [Unreleased]
+### Changed
+- `check-kube-service-available.rb`: added `--ignore-evicted` which will ignore pods that are in the Evicted state (@dave-shawley)
 
 ## [5.0.2] - 2020-09-15
 ### Fixed
